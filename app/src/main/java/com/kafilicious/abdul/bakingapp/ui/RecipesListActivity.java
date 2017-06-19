@@ -57,6 +57,7 @@ public class RecipesListActivity extends AppCompatActivity {
             index = intent.getIntExtra(RECIPE_INDEX, 0);
             steps = recipe_list.get(index).getSteps();
             ingredientsList = recipe_list.get(index).getIngredients();
+            toolbar.setTitle(recipe_list.get(index).getName());
         }
 
         if (findViewById(R.id.step_description_container) != null) {
