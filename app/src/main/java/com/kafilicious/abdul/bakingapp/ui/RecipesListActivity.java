@@ -1,6 +1,7 @@
 package com.kafilicious.abdul.bakingapp.ui;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -50,6 +51,10 @@ public class RecipesListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_list);
         setSupportActionBar(toolbar);
 
+        final ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
 
@@ -57,7 +62,7 @@ public class RecipesListActivity extends AppCompatActivity {
             index = intent.getIntExtra(RECIPE_INDEX, 0);
             steps = recipe_list.get(index).getSteps();
             ingredientsList = recipe_list.get(index).getIngredients();
-            toolbar.setTitle(recipe_list.get(index).getName());
+            actionBar.setTitle(recipe_list.get(index).getName());
         }
 
         if (findViewById(R.id.step_description_container) != null) {
