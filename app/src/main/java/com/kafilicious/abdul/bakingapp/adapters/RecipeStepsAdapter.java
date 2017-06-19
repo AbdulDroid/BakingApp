@@ -54,13 +54,13 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             @Override
             public void onClick(View view) {
                 if (twoPanes){
-//                    Bundle arguments = new Bundle();
-//                    arguments.putString(RecipeDetailsFragment.ARG_ITEM_ID, String.valueOf(holder.recipeStep.getId()));
-//                    RecipeDetailsFragment fragment = new RecipeDetailsFragment();
-//                    fragment.setArguments(arguments);
-//                    ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.recipe_detail_container, fragment)
-//                            .commit();
+                    Bundle arguments = new Bundle();
+                    arguments.putInt(RecipeDetailsFragment.ARG_ITEM_ID, getAdapterposition());
+                    RecipeDetailsFragment fragment = new RecipeDetailsFragment();
+                    fragment.setArguments(arguments);
+                    ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.recipe_detail_container, fragment)
+                            .commit();
                 }else{
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailsActivity.class);

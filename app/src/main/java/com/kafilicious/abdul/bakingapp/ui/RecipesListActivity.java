@@ -65,7 +65,7 @@ public class RecipesListActivity extends AppCompatActivity {
             actionBar.setTitle(recipe_list.get(index).getName());
         }
 
-        if (findViewById(R.id.step_description_container) != null) {
+        if (findViewById(R.id.recipe_step_details_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-sw600dp).
             // If this view is present, then the

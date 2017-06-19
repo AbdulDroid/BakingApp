@@ -8,14 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1.5"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorPrimaryDark" />
 
         <TextView
             android:layout_width="match_parent"
@@ -25,6 +19,7 @@
             android:paddingEnd="@dimen/padding_small"
             android:paddingStart="@dimen/padding_small"
             android:text="@string/ingredients"
+            android:textSize="16sp"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
@@ -39,16 +34,16 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recipe_ingredients_rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             tools:listitem="@layout/ingredient_list_content" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2.5"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/padding_normal">
 
         <TextView
             android:layout_width="match_parent"
@@ -58,6 +53,7 @@
             android:paddingStart="@dimen/padding_small"
             android:paddingTop="@dimen/margin_small"
             android:text="@string/steps"
+            android:textSize="16sp"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
