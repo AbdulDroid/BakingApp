@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="text_weight">15</integer>
+    <integer name="header_weight">1</integer>
+    <dimen name="video">500dp</dimen>
+</resources>

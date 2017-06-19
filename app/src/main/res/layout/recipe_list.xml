@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:name="com.kafilicious.abdul.recipedetails.RecipeListFragment"
+    android:id="@+id/recipe_list"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kafilicious.abdul.bakingapp.ui.RecipesListActivity">
+
+    <include layout="@layout/recipe_list_content_detail"/>
+
+</LinearLayout>

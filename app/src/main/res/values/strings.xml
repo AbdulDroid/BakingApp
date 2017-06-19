@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">BakingApp</string>
+    <string name="recipe_content_descriptor">%1$s Recipe</string>
+    <string name="recipe_place_holder_text">Cup Cake</string>
+    <string name="servings_place_holder_text">8 servings</string>
+    <string name="servings_text">%1$s servings</string>
+    <string name="steps">Steps</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="step_text">Step %1$d:</string>
+    <string name="step_description">Step Description</string>
+</resources>

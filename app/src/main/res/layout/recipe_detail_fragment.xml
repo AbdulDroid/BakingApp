@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+        <FrameLayout
+            android:id="@+id/recipe_step_header_container"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <TextView
+                android:id="@+id/recipe_step_header"
+                android:layout_width="match_parent"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_small"
+                android:layout_height="match_parent"
+                tools:text="Adding a pinch of salt"
+                android:gravity="center_vertical" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/video_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small">
+
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/video_player"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/video"
+                app:use_artwork="true"/>
+        </FrameLayout>
+
+
+
+        <FrameLayout
+            android:id="@+id/step_description_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_small">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginTop="2dp"
+                android:elevation="@dimen/margin_small">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="@integer/header_weight"
+                        android:text="@string/step_description"
+                        android:textAllCaps="true"
+                        android:paddingStart="@dimen/margin_small"
+                        android:paddingEnd="@dimen/margin_small"
+                        android:gravity="center_vertical" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/black" />
+
+                    <TextView
+                        android:id="@+id/recipe_step_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:paddingTop="@dimen/padding_small"
+                        android:layout_weight="@integer/text_weight"
+                        tools:text="Ashafah Muhammad Suraju"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </FrameLayout>
+
+</LinearLayout>
