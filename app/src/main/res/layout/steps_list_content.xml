@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_small"
+    android:layout_height="50dp"
     android:layout_marginBottom="@dimen/margin_small"
-    android:orientation="vertical">
+    android:layout_marginTop="@dimen/margin_small"
+    android:background="?android:attr/selectableItemBackground">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/step_id"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingStart="@dimen/padding_small"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/white"
+        android:fontFamily="sans-serif-light"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_normal"
+        tools:text="Step 1:" />
+
+    <TextView
+        android:id="@+id/short_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:paddingEnd="@dimen/padding_small"
+        android:paddingStart="@dimen/padding_small"
+        android:textSize="@dimen/text_size_normal"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/white"
+        tools:text="Wash your hands thoroughly" />
 
-        <TextView
-            android:id="@+id/step_id"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="@android:color/white"
-            android:paddingStart="@dimen/padding_small"
-            android:paddingEnd="@dimen/padding_small"
-            tools:text="Step 1:" />
-
-        <TextView
-            android:id="@+id/short_description"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textColor="@android:color/white"
-            android:paddingEnd="@dimen/padding_normal"
-            android:paddingStart="@dimen/padding_normal"
-            tools:text="Wash your hands thoroughly" />
-
-    </LinearLayout>
 </LinearLayout>

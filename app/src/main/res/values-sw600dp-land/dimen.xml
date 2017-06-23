@@ -3,4 +3,5 @@
     <integer name="text_weight">15</integer>
     <integer name="header_weight">2</integer>
     <dimen name="video">400dp</dimen>
+    <integer name="grid_column">3</integer>
 </resources>

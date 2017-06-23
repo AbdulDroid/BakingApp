@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,24 +8,23 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="com.kafilicious.abdul.bakingapp.ui.RecipesListActivity">
+    tools:context="com.example.floating.bakingapp.ui.RecipeListActivity">
 
     <!--
     This layout is a two-pane layout for the Recipe
     master/detail flow.
-    
-    -->
 
-   <include
-       android:layout_width="0dp"
-       android:layout_height="match_parent"
-       android:layout_weight="1.4"
-       layout="@layout/recipe_list_content_detail"/>
+    -->
 
     <include
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2.6"
-        layout="@layout/recipe_detail_fragment"/>
+        android:layout_weight="2"
+        layout="@layout/recipe_list_content_detail"/>
 
+    <include
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        layout="@layout/recipe_detail_fragment"/>
 </LinearLayout>

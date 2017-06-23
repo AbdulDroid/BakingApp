@@ -3,49 +3,149 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginStart="@dimen/margin_small"
     android:layout_marginTop="@dimen/margin_small"
-    android:elevation="@dimen/margin_small">
+    android:elevation="@dimen/margin_small"
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/recipe_image"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/recipe_content_descriptor"
-            tools:src="@mipmap/ic_launcher"
-            android:layout_gravity="start|top"/>
+            android:layout_height="0dp"
+            android:layout_weight="8">
+
+            <ImageView
+                android:id="@+id/recipe_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start|top"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/recipe_content_descriptor"
+                tools:src="@mipmap/ic_launcher" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent_black"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true">
+
+                <TextView
+                    android:id="@+id/recipe_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_large"
+                    tools:text="@string/recipe_place_holder_text" />
+
+                <TextView
+                    android:id="@+id/number_of_servings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textStyle="italic"
+                    tools:text="@string/servings_place_holder_text" />
+
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/transparent_black"
-            android:layout_alignParentBottom="true">
+            android:layout_height="0dp"
+            android:layout_weight="0.7">
 
-            <TextView
-                android:id="@+id/recipe_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="@string/recipe_place_holder_text"
-                android:textSize="@dimen/text_size_large"
-                android:textColor="@color/text_color" />
+            <LinearLayout
+                android:id="@+id/items"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical|start"
+                android:paddingTop="@dimen/padding_normal"
+                android:paddingBottom="@dimen/padding_normal"
+                android:paddingStart="@dimen/margin_normal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Ingredients"
+                    android:layout_gravity="center_horizontal"/>
+                <TextView
+                    android:id="@+id/no_of_ingredients"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="10"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/number_of_servings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="@string/servings_place_holder_text"
-                android:textSize="@dimen/text_size_normal"
-                android:textColor="@color/text_color"
-                android:textStyle="italic"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/black"/>
+
+            <LinearLayout
+                android:id="@+id/process"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/padding_normal"
+                android:paddingBottom="@dimen/padding_normal"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:paddingStart="@dimen/margin_normal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Steps"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/no_of_steps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="20"
+                    android:layout_gravity="center_horizontal|center_vertical"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/black"/>
+
+            <LinearLayout
+                android:id="@+id/favorite_layout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:paddingTop="@dimen/padding_normal"
+                android:paddingBottom="@dimen/padding_normal"
+                android:paddingStart="@dimen/margin_normal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="Favorite"
+                    android:layout_gravity="center_vertical|center_horizontal"/>
+                <TextView
+                    android:id="@+id/favorites"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="No"
+                    android:layout_gravity="center_horizontal|center_vertical"/>
+            </LinearLayout>
 
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
+
 </android.support.v7.widget.CardView>

@@ -10,58 +10,69 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-            <TextView
-                android:id="@+id/recipe_step_header"
-                android:layout_width="match_parent"
-                android:paddingStart="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_small"
-                android:layout_height="30dp"
-                tools:text="Adding a pinch of salt"
-                android:gravity="center_vertical"
-                android:elevation="@dimen/margin_small"
-                tools:targetApi="lollipop" />
-    
-            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                android:id="@+id/video_player"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/video"
-                app:use_artwork="true"/>
 
-            <android.support.v7.widget.CardView
+        <TextView
+            android:id="@+id/recipe_step_header"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:elevation="@dimen/margin_small"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/padding_small"
+            android:paddingStart="@dimen/padding_small"
+            android:textSize="@dimen/text_size_small"
+            android:textColor="@android:color/black"
+            tools:targetApi="lollipop"
+            tools:text="Adding a pinch of salt" />
+
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/video"
+            app:use_artwork="true" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/margin_small"
+            tools:targetApi="lollipop">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
-                android:elevation="@dimen/margin_small"
-                tools:targetApi="lollipop">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/margin_normal"
+                    android:text="@string/step_description"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_normal"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/step_description"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/black"
-                        android:padding="@dimen/margin_normal"
-                        android:gravity="center_vertical" />
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@android:color/black" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimaryDark" />
 
-                    <TextView
-                        android:id="@+id/recipe_step_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/padding_small"
-                        tools:text="Ashafa Muhammad Suraju"/>
+                <TextView
+                    android:id="@+id/recipe_step_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:paddingTop="@dimen/padding_small"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_size_normal"
+                    tools:text="Abdulkarim Abdulrahman Ayoola" />
 
-                </LinearLayout>
+            </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 
 </FrameLayout>
