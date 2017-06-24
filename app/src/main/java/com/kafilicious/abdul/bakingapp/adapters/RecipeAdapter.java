@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kafilicious.abdul.bakingapp.R;
+import com.example.floating.bakingapp.R;
 import com.kafilicious.abdul.bakingapp.data.Recipe;
 import com.kafilicious.abdul.bakingapp.ui.RecipesListActivity;
 
