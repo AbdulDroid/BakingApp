@@ -15,6 +15,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.floating.bakingapp.R.id.ingredient;
+
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
  */
@@ -45,36 +47,41 @@ public class RecipeIngredientsAdapter extends RecyclerView.Adapter<RecipeIngredi
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.ingredients = ingredientsList.get(position);
         String measure = "";
-        switch (ingredientsList.get(position).getMeasure()){
-            case "UNIT":
-                measure = "";
-                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
-                break;
-            case "G":
-                measure = "gram";
-                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
-                break;
-            case "K":
-                measure = "Kilo";
-                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
-                break;
-            case "TSP":
-                measure = "teaspoon";
-                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
-                break;
-            case "TBLSP":
-                measure = "tablespoon";
-                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
-                break;
-            case "OZ":
-                measure = "ounce";
-                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
-                break;
-            case "CUP":
-                measure = "cup";
-                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
-                break;
-        }
+
+
+//        switch (ingredientsList.get(position).getMeasure()){
+//            case "UNIT":
+//                measure = "";
+//                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
+//                break;
+//            case "G":
+//                measure = "gram";
+//                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
+//                break;
+//            case "K":
+//                measure = "Kilo";
+//                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
+//                break;
+//            case "TSP":
+//                measure = "teaspoon";
+//                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
+//                break;
+//            case "TBLSP":
+//                measure = "tablespoon";
+//                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
+//                break;
+//            case "OZ":
+//                measure = "ounce";
+//                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
+//                break;
+//            case "CUP":
+//                measure = "cup";
+//                measure = setProperMeasure(ingredientsList.get(position).getQuantity(), measure);
+//                break;
+//        }
+
+        measure = setProperMeasure(ingredientsList.get(position).getQuantity(),
+                ingredientsList.get(position).getMeasure());
         String ingredient = ingredientsList.get(position).getIngredient();
 
 
@@ -91,7 +98,7 @@ public class RecipeIngredientsAdapter extends RecyclerView.Adapter<RecipeIngredi
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.ingredient) TextView ingredientTextView;
+        @BindView(ingredient) TextView ingredientTextView;
         public Ingredients ingredients;
 
         public ViewHolder(View view) {
@@ -102,6 +109,30 @@ public class RecipeIngredientsAdapter extends RecyclerView.Adapter<RecipeIngredi
     }
 
     public String setProperMeasure(double quantity, String measure){
+
+        switch (measure){
+            case "UNIT":
+                measure = "";
+                break;
+            case "G":
+                measure = "gram";
+                break;
+            case "K":
+                measure = "Kilo";
+                break;
+            case "TSP":
+                measure = "teaspoon";
+                break;
+            case "TBLSP":
+                measure = "tablespoon";
+                break;
+            case "OZ":
+                measure = "ounce";
+                break;
+            case "CUP":
+                measure = "cup";
+                break;
+        }
 
         if (quantity > 0){
             if (quantity > 0 && measure.equals(""))
@@ -116,5 +147,21 @@ public class RecipeIngredientsAdapter extends RecyclerView.Adapter<RecipeIngredi
                 measure = (int) quantity + " " + measure + "s of ";
         }
         return measure;
+    }
+
+    String getIngredientsString(String measures, String ingredient){
+        String ingredientList;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < ingredientsList.size(); i++) {
+            measures = setProperMeasure(ingredientsList.get(i).getQuantity(),
+                    ingredientsList.get(i).getMeasure());
+            ingredient = ingredientsList.get(i).getIngredient();
+            String singleIngredient = ". " + measures + ingredient + "\n";
+            stringBuilder.append(singleIngredient);
+        }
+
+        ingredientList = stringBuilder.toString();
+        return ingredientList;
     }
 }

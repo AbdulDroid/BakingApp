@@ -1,5 +1,6 @@
 package com.example.floating.bakingapp.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.adapters.RecipeIngredientsAdapter;
@@ -29,7 +31,8 @@ import static com.example.floating.bakingapp.fragments.RecipeDetailsFragment.mIn
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
  */
 
-public class RecipeListActivity extends AppCompatActivity {
+public class RecipeListActivity extends AppCompatActivity implements RecipeStepsAdapter
+        .OnStepItemClickListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a
@@ -39,11 +42,12 @@ public class RecipeListActivity extends AppCompatActivity {
     public static ArrayList<Steps> steps;
     public static ArrayList<Ingredients> ingredientsList;
     private RecyclerView.LayoutManager layoutManager, layoutManager1;
-    //    String RECIPE_NAME = "recipe_name";
-//    String RECIPE_STEPS_LIST = "recipe_steps";
-//    String RECIPE_INGREDIENTS_LIST = "recipe_ingredients";
+    String STEP_ITEM = "step_item";
     public static final String RECIPE_INDEX = "index";
-    public static int index = 0;
+    public static final String RECIPE_NAME = "name";
+    public static final String RECIPE_STEPS = "recipe_steps";
+    public static final String RECIPE_INGREDIENT = "recipe_ingredients";
+    public static Integer index;
     RecipeStepsAdapter adapter;
     RecipeIngredientsAdapter adapter1;
     String title;
@@ -72,16 +76,23 @@ public class RecipeListActivity extends AppCompatActivity {
 
         if (savedInstanceState != null){
             index = savedInstanceState.getInt(RECIPE_INDEX);
-            steps = recipe_list.get(index).getSteps();
-            ingredientsList = recipe_list.get(index).getIngredients();
-            actionBar.setTitle(recipe_list.get(index).getName());
+            steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+            ingredientsList = savedInstanceState.getParcelableArrayList(RECIPE_INGREDIENT);
+            title = savedInstanceState.getString(RECIPE_NAME);
+            if (title != null)
+                actionBar.setTitle(title);
         }
 
         if (intent != null){
-            index = intent.getIntExtra(RECIPE_INDEX, 0);
+            if ((Integer)intent.getIntExtra(RECIPE_INDEX, 0) != null)
+                index = intent.getIntExtra(RECIPE_INDEX, 0);
+            else
+                index = 0;
             steps = recipe_list.get(index).getSteps();
             ingredientsList = recipe_list.get(index).getIngredients();
-            actionBar.setTitle(recipe_list.get(index).getName());
+            title = recipe_list.get(index).getName();
+            if (title != null)
+                actionBar.setTitle(title);
             if (mTwoPane){
                 Bundle arguments = new Bundle();
                 arguments.putInt(RecipeDetailsFragment.ITEM_ID, mIndex);
@@ -122,6 +133,8 @@ public class RecipeListActivity extends AppCompatActivity {
         adapter = new RecipeStepsAdapter(steps, mTwoPane);
         stepsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         stepsRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        adapter.setOnStepItemClickListener(this);
 
         ingredientRecyclerView.setHasFixedSize(true);
         layoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -136,5 +149,27 @@ public class RecipeListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(RECIPE_INDEX, index);
+        outState.putString(RECIPE_NAME, title);
+        outState.putParcelableArrayList(RECIPE_STEPS, steps);
+        outState.putParcelableArrayList(RECIPE_INGREDIENT, ingredientsList);
+    }
+
+    @Override
+    public void onStepItemClickListener(View view, int position) {
+        if (mTwoPane){
+            Bundle arguments = new Bundle();
+            arguments.putInt(RecipeDetailsFragment.ITEM_ID, position);
+            arguments.putBoolean(RecipeDetailsFragment.PANES, mTwoPane);
+            RecipeDetailsFragment fragment = new RecipeDetailsFragment();
+            fragment.setArguments(arguments);
+            ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.recipe_step_details_container, fragment)
+                    .commit();
+        }else{
+            Context context = view.getContext();
+            Intent intent = new Intent(context, RecipeDetailsActivity.class);
+            intent.putExtra(RecipeDetailsFragment.ITEM_ID, position);
+            context.startActivity(intent);
+        }
     }
 }

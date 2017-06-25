@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.ui.RecipeDetailsActivity;
 import com.example.floating.bakingapp.data.Steps;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
+import com.example.floating.bakingapp.ui.RecipeDetailsActivity;
 
 import java.util.ArrayList;
 
@@ -31,6 +31,17 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     private boolean twoPanes;
     private int mSelectedPos;
     private View mSelectedV;
+    String STEP_ITEM = "step_item";
+
+    public OnStepItemClickListener mItemClickListener;
+
+    public void setOnStepItemClickListener(OnStepItemClickListener mItemClickListener){
+        this.mItemClickListener = mItemClickListener;
+    }
+
+    public interface OnStepItemClickListener{
+        void onStepItemClickListener(View view, int position);
+    }
 
     public RecipeStepsAdapter(ArrayList<Steps> stepsList, boolean twoPanes){
         this.mSteps = stepsList;
@@ -55,6 +66,8 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+//                Steps step = mSteps.get(getA)
                 if (twoPanes){
                     Bundle arguments = new Bundle();
                     arguments.putInt(RecipeDetailsFragment.ITEM_ID, position);
@@ -97,6 +110,15 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
         @Override
         public void onClick(View view) {
+
+//            Steps step = mSteps.get(getAdapterPosition());
+//
+//            Bundle stepArguments = new Bundle();
+//
+//            stepArguments.putParcelable(STEP_ITEM,step);
+//            ((RecipeListActivity)context).onRecipeStepSelected(stepArguments, getAdapterPosition());
+            if (mItemClickListener != null)
+                mItemClickListener.onStepItemClickListener(view, getAdapterPosition());
             if (!view.isSelected()){
                 //We are selecting the view clicked
                 if (mSelectedV != null){

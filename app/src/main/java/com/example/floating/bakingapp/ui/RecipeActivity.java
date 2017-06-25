@@ -16,7 +16,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -57,32 +56,40 @@ public class RecipeActivity extends AppCompatActivity {
         toolbar.setTitle(getResources().getString(R.string.app_name));
         setSupportActionBar(toolbar);
         mRecyclerView.setHasFixedSize(true);
-        final int column = getResources().getInteger(R.integer.grid_column);
+        int column = 0;
+        if(getSmallestWidth() > 600) {
+            column = getResources().getInteger(R.integer.grid_column);
+        }
 
         if (savedInstanceState != null){
             mRecipes = savedInstanceState.getParcelableArrayList(RECIPE);
             loadRecipes(column);
-        }
+        }else {
 
-        final String url = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/" +
-                "59121517_baking/baking.json";
+            final String url = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/" +
+                    "59121517_baking/baking.json";
 
-        if (isNetworkAvailable()) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            loadRecipes(column);
-            getRecipeData(url);
-        } else {
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            Snackbar snackbar = Snackbar.make(layout, "No Internet Connection," +
-                    " Turn ON data and click RERTY", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction("RETRY", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    loadRecipes(column);
-                    getRecipeData(url);
-                }
-            });
-            snackbar.show();
+            if (isNetworkAvailable()) {
+                mRecyclerView.setVisibility(View.VISIBLE);
+                loadRecipes(column);
+                getRecipeData(url);
+            } else {
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                Snackbar snackbar = Snackbar.make(layout, "No Internet Connection," +
+                        " Turn ON data and click RERTY", Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction("RETRY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int column = 0;
+                        if (getSmallestWidth() > 600) {
+                            column = getResources().getInteger(R.integer.grid_column);
+                        }
+                        loadRecipes(column);
+                        getRecipeData(url);
+                    }
+                });
+                snackbar.show();
+            }
         }
     }
 
@@ -120,7 +127,7 @@ public class RecipeActivity extends AppCompatActivity {
         return status;
     }
 
-    public void getRecipeData(String url) {
+    public void getRecipeData(final String url) {
         progressbar.setVisibility(View.VISIBLE);
 
         JsonArrayRequest req = new JsonArrayRequest(url,
@@ -136,6 +143,7 @@ public class RecipeActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         progressbar.setVisibility(View.INVISIBLE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
                         mAdapter.steRecipesData(mRecipes);
                         Log.i(TAG, "Adapter updated appropriately");
                     }
@@ -143,8 +151,21 @@ public class RecipeActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), error.getMessage(),
-                        Toast.LENGTH_LONG).show();
+                mRecyclerView.setVisibility(View.INVISIBLE);
+                Snackbar snackbar = Snackbar.make(layout, "No Internet Connection," +
+                        " Turn ON data and click RERTY", Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction("RETRY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int column = 0;
+                        if (getSmallestWidth() > 600) {
+                            column = getResources().getInteger(R.integer.grid_column);
+                        }
+                        loadRecipes(column);
+                        getRecipeData(url);
+                    }
+                });
+                snackbar.show();
                 progressbar.setVisibility(View.INVISIBLE);
             }
         });
