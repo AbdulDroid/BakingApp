@@ -52,15 +52,22 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
     public static final String POSITION = "position";
     public static final String PANES = "panes";
     public static final String STEPS = "steps";
+    public static final String AUTOPLAY = "autoplay";
+    public static final String CURRENT_WINDOW = "current_window";
+    public static final String PLAYBACK_POSITION = "playback_position";
 
 
     public static ArrayList<Steps> steps_list;
     public static int mIndex = 0;
     private long mPosition;
+    private boolean autoplay = false;
     public static boolean mTwoPane;
     View mStepDetails;
     int currVideoIndex;
     private SimpleExoPlayer mExoPlayer;
+    private TextView mStepHeaderTextView, mStepDescriptionTextView;
+    private SimpleExoPlayerView mPlayerView;
+    private CardView details;
 
 
     /**
@@ -77,48 +84,58 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
     public RecipeDetailsFragment() {
     }
 
-    private TextView mStepHeaderTextView, mStepDescriptionTextView;
-    private SimpleExoPlayerView mPlayerView;
-    private CardView details;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recipe_detail_fragment, container, false);
 
         if (savedInstanceState != null) {
             mIndex = savedInstanceState.getInt(ITEM_ID);
             mTwoPane = savedInstanceState.getBoolean(PANES);
-            mPosition = savedInstanceState.getLong(POSITION);
+            mPosition = savedInstanceState.getLong(POSITION,0);
             steps_list = savedInstanceState.getParcelableArrayList(STEPS);
-        } else {
-            mTwoPane = getArguments().getBoolean(PANES);
-            mIndex = getArguments().getInt(ITEM_ID);
-            steps_list = steps;
+            autoplay = savedInstanceState.getBoolean(AUTOPLAY, false);
+            currVideoIndex = savedInstanceState.getInt(CURRENT_WINDOW, 0);
         }
-//        if (getArguments().containsKey(STEP_ITEM)) {
-//            // Load the dummy content specified by the fragment
-//            // arguments. In a real-world scenario, use a Loader
-//            // to load content from a content provider.
-//            //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-//
-//            Activity activity = this.getActivity();
-//            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_details);
-//            if (appBarLayout != null) {
-//                appBarLayout.setTitle("");
-//            }
-//        }
+
+        View rootView = inflater.inflate(R.layout.recipe_detail_fragment, container, false);
+
 
         mStepDetails = (View) rootView.findViewById(R.id.recipe_detail_container);
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.video_player);
         mStepDescriptionTextView = (TextView) rootView.findViewById(R.id.recipe_step_description);
         mStepHeaderTextView = (TextView) rootView.findViewById(R.id.recipe_step_header);
         details = (CardView) rootView.findViewById(R.id.description);
-        initializePlayer(Uri.parse(steps_list.get(mIndex).getVideoURL()));
-        mStepHeaderTextView.setText(steps_list.get(mIndex).getShortDescription());
-        mStepDescriptionTextView.setText(steps_list.get(mIndex).getDescription());
+
+        mIndex = getArguments().getInt(ITEM_ID);
+        mTwoPane = getArguments().getBoolean(PANES);
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        releasePlayer();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        releasePlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        showViewsPhone();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        releasePlayer();
     }
 
     private void initializePlayer(Uri mediaUri) {
@@ -138,11 +155,11 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
 
         MediaSource mediaSource = new ExtractorMediaSource(mediaUri,
                 new DefaultDataSourceFactory(
-                getActivity(), userAgent),
+                        getActivity(), userAgent),
                 new DefaultExtractorsFactory(), null, null);
 
         mExoPlayer.prepare(mediaSource);
-}
+    }
 
     void showViewsPhone() {
         if (!mTwoPane && isLandscape()) {
@@ -151,6 +168,8 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
             mStepDescriptionTextView.setVisibility(View.GONE);
             details.setVisibility(View.GONE);
             playInstructionVideo(mIndex);
+            mStepHeaderTextView.setText(steps_list.get(mIndex).getShortDescription());
+            mStepDescriptionTextView.setText(steps_list.get(mIndex).getDescription());
         } else {
             mStepHeaderTextView.setVisibility(View.VISIBLE);
             mStepDescriptionTextView.setVisibility(View.VISIBLE);
@@ -182,29 +201,6 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        releasePlayer();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        releasePlayer();
-    }
-
 
     boolean isLandscape() {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -232,7 +228,11 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        if (mExoPlayer != null){
+            outState.putLong(PLAYBACK_POSITION, mPosition);
+            outState.putInt(CURRENT_WINDOW, currVideoIndex);
+            outState.putBoolean(AUTOPLAY, autoplay);
+        }
         outState.putBoolean(PANES, mTwoPane);
         outState.putInt(ITEM_ID, mIndex);
         outState.putParcelableArrayList(STEPS, steps_list);

@@ -9,8 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -33,18 +32,22 @@
             android:layout_marginTop="@dimen/margin_small"
             android:background="@color/colorPrimaryDark" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recipe_ingredients_rv"
+        <TextView
+            android:id="@+id/recipe_ingredients_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/ingredient_list_content" />
+            android:textSize="@dimen/text_size_normal"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/white"
+            android:padding="@dimen/padding_small"
+            tools:text="@string/ingredients" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="@dimen/padding_normal">
 

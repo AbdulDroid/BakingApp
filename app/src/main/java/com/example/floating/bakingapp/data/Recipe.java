@@ -37,6 +37,8 @@ public class Recipe implements Parcelable {
     private ArrayList<Steps> steps;
     @SerializedName("servings")
     private int servings;
+    @SerializedName("image")
+    private String image;
 
     public Recipe() {
     }
@@ -46,6 +48,7 @@ public class Recipe implements Parcelable {
         this.ingredients = in.createTypedArrayList(Ingredients.CREATOR);
         this.steps = in.createTypedArrayList(Steps.CREATOR);
         this.servings = in.readInt();
+        this.image = in.readString();
     }
 
     public Recipe(JSONObject bake_json) throws JSONException {
@@ -62,6 +65,7 @@ public class Recipe implements Parcelable {
             steps.add(new Steps(stepsJA.getJSONObject(i)));
         }
         this.servings = bake_json.getInt("servings");
+        this.image = bake_json.getString("image");
     }
 
 
@@ -80,6 +84,9 @@ public class Recipe implements Parcelable {
     public int getServings() {
         return servings;
     }
+    public String getImage() {
+        return image;
+    }
 
     @Override
     public int describeContents() {
@@ -92,5 +99,6 @@ public class Recipe implements Parcelable {
         parcel.writeTypedList(this.ingredients);
         parcel.writeTypedList(this.steps);
         parcel.writeInt(this.servings);
+        parcel.writeString(this.image);
     }
 }

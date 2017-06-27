@@ -8,8 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.data.Steps;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
@@ -29,7 +31,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     private ArrayList<Steps> mSteps;
     private Context context;
     private boolean twoPanes;
-    private int mSelectedPos;
+    public static final String STEPS = "steps";
     private View mSelectedV;
     String STEP_ITEM = "step_item";
 
@@ -59,9 +61,25 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.recipeStep = mSteps.get(position);
-        holder.stepTextView.setText(String.format(context.getResources()
-                .getString(R.string.step_text), mSteps.get(position).getId() + 1));
+        if (holder.getAdapterPosition() == 0){
+            holder.stepTextView.setText("");
+        }else {
+            holder.stepTextView.setText(String.format(context.getResources()
+            .getString(R.string.step_text), mSteps.get(position).getId()));
+        }
         holder.descriptionTextView.setText(mSteps.get(position).getShortDescription());
+
+        if (mSteps.get(position).getVideoURL().isEmpty()){
+            Glide.with(context)
+                    .load(mSteps.get(position).getThumbnailURL())
+                    .placeholder(R.drawable.ic_videocam_off_white_24dp)
+                    .into(holder.imageImageView);
+        }else{
+            Glide.with(context)
+                    .load(mSteps.get(position).getThumbnailURL())
+                    .placeholder(R.drawable.ic_videocam_white_24dp)
+                    .into(holder.imageImageView);
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +90,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                     Bundle arguments = new Bundle();
                     arguments.putInt(RecipeDetailsFragment.ITEM_ID, position);
                     arguments.putBoolean(RecipeDetailsFragment.PANES, twoPanes);
+                    arguments.putParcelableArrayList(RecipeDetailsFragment.STEPS, mSteps);
                     RecipeDetailsFragment fragment = new RecipeDetailsFragment();
                     fragment.setArguments(arguments);
                     ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
@@ -80,7 +99,8 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                 }else{
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailsActivity.class);
-                    intent.putExtra(RecipeDetailsFragment.ITEM_ID, holder.recipeStep.getId());
+                    intent.putExtra(RecipeDetailsFragment.ITEM_ID, holder.getAdapterPosition());
+                    intent.putParcelableArrayListExtra(STEPS, mSteps);
                     context.startActivity(intent);
                 }
             }
@@ -96,8 +116,12 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public View mView;
-        @BindView(R.id.step_id) TextView stepTextView;
-        @BindView(R.id.short_description) TextView descriptionTextView;
+        @BindView(R.id.step_id)
+        TextView stepTextView;
+        @BindView(R.id.short_description)
+        TextView descriptionTextView;
+        @BindView(R.id.recipe_step_image)
+        ImageView imageImageView;
         public Steps recipeStep;
 
         public ViewHolder(View view) {
@@ -117,6 +141,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 //
 //            stepArguments.putParcelable(STEP_ITEM,step);
 //            ((RecipeListActivity)context).onRecipeStepSelected(stepArguments, getAdapterPosition());
+            int mSelectedPos = 0;
             if (mItemClickListener != null)
                 mItemClickListener.onStepItemClickListener(view, getAdapterPosition());
             if (!view.isSelected()){

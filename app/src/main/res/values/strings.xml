@@ -6,7 +6,8 @@
     <string name="servings_text">%1$d servings</string>
     <string name="steps">Steps</string>
     <string name="ingredients">Ingredients</string>
-    <string name="step_text">Step %1$d:</string>
+    <string name="step_text">%1$d:</string>
+    <string name ="recipe_step_image_descriptor">Recipe Step Image</string>
     <string name="step_description">Step Description</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>

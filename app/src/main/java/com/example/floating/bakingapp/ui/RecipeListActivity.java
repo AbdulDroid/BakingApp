@@ -11,13 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.adapters.RecipeIngredientsAdapter;
 import com.example.floating.bakingapp.adapters.RecipeStepsAdapter;
 import com.example.floating.bakingapp.data.Ingredients;
 import com.example.floating.bakingapp.data.Steps;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
+import com.example.floating.bakingapp.utils.RecipeUtils;
 
 import java.util.ArrayList;
 
@@ -49,11 +50,10 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
     public static final String RECIPE_INGREDIENT = "recipe_ingredients";
     public static Integer index;
     RecipeStepsAdapter adapter;
-    RecipeIngredientsAdapter adapter1;
     String title;
 
-    @BindView(R.id.recipe_ingredients_rv)
-    RecyclerView ingredientRecyclerView;
+    @BindView(R.id.recipe_ingredients_tv)
+    TextView ingredientTextView;
     @BindView(R.id.recipe_steps_rv)
     RecyclerView stepsRecyclerView;
     @BindView(R.id.toolbar_list)
@@ -136,12 +136,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
         adapter.notifyDataSetChanged();
         adapter.setOnStepItemClickListener(this);
 
-        ingredientRecyclerView.setHasFixedSize(true);
-        layoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        ingredientRecyclerView.setLayoutManager(layoutManager1);
-        adapter1 = new RecipeIngredientsAdapter(ingredientsList);
-        ingredientRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        ingredientRecyclerView.setAdapter(adapter1);
+        ingredientTextView.setText(RecipeUtils.getIngredientsString(ingredientsList));
 
     }
 

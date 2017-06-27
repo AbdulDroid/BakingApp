@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.data.Recipe;
 import com.example.floating.bakingapp.ui.RecipeListActivity;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,7 +30,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private Context context;
     String RECIPE_NAME = "recipe_name";
     String RECIPE_STEPS_LIST = "recipe_steps";
-    String RECIPE_INGREDIENTS_LIST = "recipe_ingredients";
+    String RECIPE_LIST = "recipe_list";
     String RECIPE_INDEX = "index";
     public RecipeAdapter(List<Recipe> recipes){
         this.recipe_list = recipes;
@@ -50,12 +53,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     public void onBindViewHolder(RecipeAdapter.ViewHolder holder, int position) {
         String recipeName = null;
         int recipeServing ;
+        String recipeImage = null;
         recipeName = recipe_list.get(position).getName();
         recipeServing = recipe_list.get(position).getServings();
+        recipeImage = recipe_list.get(position).getImage();
 
         holder.recipeTextView.setText(recipeName);
         holder.servingTextView.setText(String.format(context.getString(R.string.servings_text), recipeServing));
-        holder.recipeImageView.setImageResource(imageResource(position));
+        Glide.with(context)
+                .load(recipeImage)
+                .placeholder(imageResource(position))
+                .into(holder.recipeImageView);
     }
 
     @Override
@@ -89,7 +97,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             int position = getAdapterPosition();
             Intent intent = new Intent(context, RecipeListActivity.class);
             intent.putExtra(RECIPE_INDEX, position);
+            intent.putParcelableArrayListExtra(RECIPE_LIST, (ArrayList<Recipe>)recipe_list);
             context.startActivity(intent);
         }
     }
+
+
 }

@@ -21,16 +21,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.NestedScrollView
+    <include
+        layout="@layout/recipe_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <include layout="@layout/recipe_list"/>
-
-</android.support.v4.widget.NestedScrollView>
-
-
-
-
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    
 </android.support.design.widget.CoordinatorLayout>
