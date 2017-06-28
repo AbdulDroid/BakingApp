@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.adapters.RecipeStepsAdapter;
 import com.example.floating.bakingapp.data.Ingredients;
 import com.example.floating.bakingapp.data.Steps;
+import com.example.floating.bakingapp.database.Provider;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
 import com.example.floating.bakingapp.utils.RecipeUtils;
 
@@ -50,6 +53,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
     public static final String RECIPE_INGREDIENT = "recipe_ingredients";
     public static Integer index;
     RecipeStepsAdapter adapter;
+    private Provider provider;
     String title;
 
     @BindView(R.id.recipe_ingredients_tv)
@@ -73,6 +77,8 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
         }
 
         Intent intent = getIntent();
+
+        provider = new Provider();
 
         if (savedInstanceState != null){
             index = savedInstanceState.getInt(RECIPE_INDEX);
@@ -166,5 +172,20 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
             intent.putExtra(RecipeDetailsFragment.ITEM_ID, position);
             context.startActivity(intent);
         }
+    }
+
+    private int isLastViewed() {
+        int size = provider.getRecipeDBSize(0);
+        if (size == 0)
+            return 0;
+        else
+            return 1;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main,menu);
+        return true;
     }
 }

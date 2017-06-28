@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
  */
-public class RecipeDbHelper extends SQLiteOpenHelper {
+public  class RecipeDbHelper extends SQLiteOpenHelper {
 
     //Database version
     private static final int VERSION = 1;

@@ -12,6 +12,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.floating.bakingapp.data.Recipe;
+import com.example.floating.bakingapp.utils.RecipeUtils;
+
+import static com.example.floating.bakingapp.database.RecipeContract.RecipeEntry.COLUMN_INGREDIENT_LIST;
+import static com.example.floating.bakingapp.database.RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME;
 import static com.example.floating.bakingapp.database.RecipeContract.RecipeEntry.CONTENT_URI;
 import static com.example.floating.bakingapp.database.RecipeContract.RecipeEntry.TABLE_NAME;
 
@@ -141,5 +146,91 @@ public final class Provider extends ContentProvider{
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rows_changed;
+    }
+
+    //table methods for widget purposes
+
+    public long addViewedRecipe(Recipe recipe) {
+
+        SQLiteDatabase db = mRecipeDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_RECIPE_NAME, recipe.getName());
+        values.put(COLUMN_INGREDIENT_LIST, RecipeUtils.getIngredientsString(recipe.getIngredients()));
+
+        return db.insert(TABLE_NAME, null, values);
+    }
+
+    public long updateRecipe(Recipe recipe) {
+
+        SQLiteDatabase db = mRecipeDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_RECIPE_NAME, recipe.getName());
+        values.put(COLUMN_INGREDIENT_LIST, RecipeUtils.getIngredientsString(recipe.getIngredients()));
+
+        String selection = RecipeContract.RecipeEntry._ID + "=?";
+        String[] selectrionArgs = {String.valueOf(0)};
+
+        long updateId = db.update(
+                TABLE_NAME,
+                values,
+                selection,
+                selectrionArgs
+        );
+
+        db.close();
+        return updateId;
+    }
+
+    public Recipe getViewedRecipe() {
+        if (mRecipeDbHelper != null) {
+            SQLiteDatabase db = mRecipeDbHelper.getReadableDatabase();
+
+            Cursor cursor = db.query(
+                    TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            Recipe recipe = new Recipe();
+
+            if (cursor.moveToFirst()) {
+                do {
+                    int name_index = cursor.getColumnIndex(COLUMN_RECIPE_NAME);
+                    int ingredient_index = cursor.getColumnIndex(COLUMN_INGREDIENT_LIST);
+                    recipe.setName(cursor.getString(name_index));
+                    recipe.setIngredient_string(cursor.getString(ingredient_index));
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            return recipe;
+        }
+        return null;
+    }
+
+    public int getRecipeDBSize(int id) {
+
+        SQLiteDatabase db = mRecipeDbHelper.getReadableDatabase();
+
+        Cursor cursor = db.query(
+                TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        int size = cursor.getCount();
+        cursor.close();
+
+        return size;
     }
 }
