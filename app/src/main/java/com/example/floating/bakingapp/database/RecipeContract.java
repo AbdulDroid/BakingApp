@@ -1,10 +1,7 @@
 package com.example.floating.bakingapp.database;
 
-import net.simonvt.schematic.annotation.AutoIncrement;
-import net.simonvt.schematic.annotation.ConflictResolutionType;
-import net.simonvt.schematic.annotation.DataType;
-import net.simonvt.schematic.annotation.NotNull;
-import net.simonvt.schematic.annotation.PrimaryKey;
+import android.net.Uri;
+import android.provider.BaseColumns;
 
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
@@ -12,28 +9,18 @@ import net.simonvt.schematic.annotation.PrimaryKey;
 
 public class RecipeContract {
 
-    @DataType(DataType.Type.INTEGER)
-    @PrimaryKey(onConflict = ConflictResolutionType.REPLACE)
-    @AutoIncrement
-    public static final String COLUMN_ID = "_id";
+    public static final String CONTENT_AUTHORITY = "com.example.floating.bakingapp";
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final String PATH_FAVORITE_RECIPE = "favorite_recipe";
 
-    @DataType(DataType.Type.INTEGER)
-    @NotNull
-    public static final String RECIPE_ID = "recipe_id";
+    public static class RecipeEntry implements BaseColumns{
+        public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_FAVORITE_RECIPE)
+                .build();
 
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String RECIPE_NAME = "recipe_name";
-
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String INGREDIENT_NAME = "ingredient";
-
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    public static final String INGREDIENT_MEASURE = "ingredient_measure";
-
-    @DataType(DataType.Type.INTEGER)
-    @NotNull
-    public static final String INGREDEINT_QUANTITY = "ingredient_quantity";
+        public static final String TABLE_NAME = "recipes";
+        public static final String _ID = "id";
+        public static final String COLUMN_RECIPE_NAME = "recipe_name";
+        public static final String COLUMN_INGREDIENT_LIST = "recipe_ingredient_list";
+    }
 }
