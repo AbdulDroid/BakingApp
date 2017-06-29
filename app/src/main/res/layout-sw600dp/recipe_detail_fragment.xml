@@ -11,20 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/recipe_step_header"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:elevation="@dimen/margin_small"
-            android:fontFamily="sans-serif-light"
-            android:gravity="center_vertical"
-            android:paddingEnd="@dimen/padding_small"
-            android:paddingStart="@dimen/padding_small"
-            android:textSize="@dimen/text_size_small"
-            android:textColor="@android:color/black"
-            tools:targetApi="lollipop"
-            tools:text="Adding a pinch of salt" />
-
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/video_player"
             android:layout_width="match_parent"
@@ -44,17 +30,16 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/recipe_step_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-light"
                     android:gravity="center_vertical"
                     android:padding="@dimen/margin_normal"
-                    android:text="@string/step_description"
-                    android:textColor="@android:color/black"
                     android:textSize="@dimen/text_size_small"
-                    android:textAllCaps="true"
-                    android:textStyle="bold" />
+                    android:textColor="@android:color/black"
+                    tools:text="Adding a pinch of salt"
+                    android:textStyle="bold"/>
 
                 <View
                     android:layout_width="match_parent"

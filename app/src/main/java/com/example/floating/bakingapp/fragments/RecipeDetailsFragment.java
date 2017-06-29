@@ -102,7 +102,7 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
         View rootView = inflater.inflate(R.layout.recipe_detail_fragment, container, false);
 
 
-        mStepDetails = (View) rootView.findViewById(R.id.recipe_detail_container);
+        mStepDetails = (View) rootView.findViewById(R.id.recipe_step_details_container);
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.video_player);
         mStepDescriptionTextView = (TextView) rootView.findViewById(R.id.recipe_step_description);
         mStepHeaderTextView = (TextView) rootView.findViewById(R.id.recipe_step_header);
@@ -164,15 +164,13 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
     void showViewsPhone() {
         if (!mTwoPane && isLandscape()) {
             hideSystemUI();
-            mStepHeaderTextView.setVisibility(View.GONE);
-            mStepDescriptionTextView.setVisibility(View.GONE);
             details.setVisibility(View.GONE);
             playInstructionVideo(mIndex);
-            mStepHeaderTextView.setText(steps_list.get(mIndex).getShortDescription());
-            mStepDescriptionTextView.setText(steps_list.get(mIndex).getDescription());
+            mStepHeaderTextView.setText(steps.get(mIndex).getShortDescription());
+            mStepDescriptionTextView.setText(steps.get(mIndex).getDescription());
         } else {
-            mStepHeaderTextView.setVisibility(View.VISIBLE);
-            mStepDescriptionTextView.setVisibility(View.VISIBLE);
+            mStepHeaderTextView.setText(steps.get(mIndex).getShortDescription());
+            mStepDescriptionTextView.setText(steps.get(mIndex).getDescription());
             details.setVisibility(View.VISIBLE);
             playInstructionVideo(mIndex);
         }
@@ -188,6 +186,8 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
             initializePlayer(Uri.parse(videoUrl));
         } else if (!thumbnailUrl.isEmpty()) {
             initializePlayer(Uri.parse(thumbnailUrl));
+        }else {
+            mPlayerView.setVisibility(View.GONE);
         }
     }
 

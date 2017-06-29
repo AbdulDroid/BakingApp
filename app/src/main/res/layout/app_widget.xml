@@ -1,36 +1,35 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#09C"
-    android:padding="@dimen/widget_margin">
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:showDividers="middle"
+    android:divider="@color/colorPrimaryDark">
 
         <TextView
             android:id="@+id/appwidget_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center"
-            android:layout_margin="8dp"
-            android:background="#09C"
+            android:padding="8dp"
+            android:background="@color/colorPrimaryDark"
             android:contentDescription="@string/appwidget_text"
-            android:text="@string/appwidget_text"
             android:textColor="#ffffff"
             android:textSize="24sp"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"
+            tools:text="@string/appwidget_text"/>
 
     <TextView
-        android:id="@+id/appwidget_ingredient_list"
+        android:id="@+id/widget_ingredient_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/appwidget_header"
-        tools:listitem="@android:layout/simple_expandable_list_item_2"/>
+        android:layout_height="match_parent"
+        android:padding="@dimen/padding_small"
+        android:textSize="@dimen/text_size_normal"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical"
+        android:textColor="#ffffff"
+        tools:text="this recipe is awesome like awesome, hmmmm hmmmm"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black"
-        android:layout_below="@id/appwidget_header" />
-
-
-
-</RelativeLayout>
+</LinearLayout>

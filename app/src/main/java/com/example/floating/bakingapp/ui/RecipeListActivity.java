@@ -1,8 +1,9 @@
 package com.example.floating.bakingapp.ui;
 
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,13 +11,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.TextView;
 
 import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.adapters.RecipeStepsAdapter;
 import com.example.floating.bakingapp.data.Ingredients;
+import com.example.floating.bakingapp.data.Recipe;
 import com.example.floating.bakingapp.data.Steps;
+import com.example.floating.bakingapp.database.RecipeContract;
+import com.example.floating.bakingapp.database.RecipeDbHelper;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
 import com.example.floating.bakingapp.utils.RecipeUtils;
 
@@ -25,15 +30,11 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.floating.bakingapp.adapters.RecipeAdapter.recipe_list;
-import static com.example.floating.bakingapp.fragments.RecipeDetailsFragment.mIndex;
-
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
  */
 
-public class RecipeListActivity extends AppCompatActivity implements RecipeStepsAdapter
-        .OnStepItemClickListener {
+public class RecipeListActivity extends AppCompatActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a
@@ -42,14 +43,18 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
     public static boolean mTwoPane;
     public static ArrayList<Steps> steps;
     public static ArrayList<Ingredients> ingredientsList;
-    private RecyclerView.LayoutManager layoutManager, layoutManager1;
+    private LinearLayoutManager layoutManager;
     String STEP_ITEM = "step_item";
     public static final String RECIPE_INDEX = "index";
     public static final String RECIPE_NAME = "name";
-    public static final String RECIPE_STEPS = "recipe_steps";
-    public static final String RECIPE_INGREDIENT = "recipe_ingredients";
+    public static final String STEPS_LIST_KEY = "recipe_steps";
+    public static final String RECIPE_LIST = "recipe_list";
+    private Parcelable stepsListState = null;
+    int mPosition = -1, topView, position;
     public static Integer index;
+    private Recipe recipe;
     RecipeStepsAdapter adapter;
+    private RecipeDbHelper provider;
     String title;
 
     @BindView(R.id.recipe_ingredients_tv)
@@ -68,34 +73,41 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+
+        provider = new RecipeDbHelper(this);
+
+
+
+
         Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(RECIPE_LIST)) {
 
-        if (savedInstanceState != null){
-            index = savedInstanceState.getInt(RECIPE_INDEX);
-            steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
-            ingredientsList = savedInstanceState.getParcelableArrayList(RECIPE_INGREDIENT);
-            title = savedInstanceState.getString(RECIPE_NAME);
+            recipe = intent.getParcelableExtra(RECIPE_LIST);
+            steps = recipe.getSteps();
+            ingredientsList = recipe.getIngredients();
+            title = recipe.getName();
+
             if (title != null)
                 actionBar.setTitle(title);
-        }
 
-        if (intent != null){
-            if ((Integer)intent.getIntExtra(RECIPE_INDEX, 0) != null)
-                index = intent.getIntExtra(RECIPE_INDEX, 0);
-            else
-                index = 0;
-            steps = recipe_list.get(index).getSteps();
-            ingredientsList = recipe_list.get(index).getIngredients();
-            title = recipe_list.get(index).getName();
-            if (title != null)
-                actionBar.setTitle(title);
-            if (mTwoPane){
+            ContentValues values = new ContentValues();
+
+            values.put(RecipeContract.RecipeEntry.COLUMN_RECIPE_NAME,recipe.getName());
+            values.put(RecipeContract.RecipeEntry.COLUMN_INGREDIENT_LIST, recipe.getIngredient_string());
+
+            if (isLastViewed() == 1) {
+                provider.updateRecipe(recipe);
+            }else {
+                provider.addViewedRecipe(recipe);
+            }
+
+            if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putInt(RecipeDetailsFragment.ITEM_ID, mIndex);
+                arguments.putInt(RecipeDetailsFragment.ITEM_ID, 0);
                 arguments.putBoolean(RecipeDetailsFragment.PANES, mTwoPane);
                 RecipeDetailsFragment fragment = new RecipeDetailsFragment();
                 fragment.setArguments(arguments);
@@ -105,27 +117,30 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
             }
         }
 
-        if (findViewById(R.id.recipe_detail_container) != null) {
+        if (findViewById(R.id.recipe_step_details_container) != null) {
             Log.e("ListActivity", "containerFound");
             // The detail container view will be present only in the
             // large-screen layouts (res/values-sw600dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
-        }else {
+
+            if (savedInstanceState == null) {
+                Bundle arguments = new Bundle();
+                arguments.putInt(RecipeDetailsFragment.ITEM_ID, 0);
+                arguments.putBoolean(RecipeDetailsFragment.PANES, mTwoPane);
+                RecipeDetailsFragment fragment = new RecipeDetailsFragment();
+                fragment.setArguments(arguments);
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.recipe_step_details_container, fragment)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
             Log.e("ListActivity", "containerNotFound");
         }
 
-        if (mTwoPane){
-            Bundle arguments = new Bundle();
-            arguments.putInt(RecipeDetailsFragment.ITEM_ID, 0);
-            arguments.putBoolean(RecipeDetailsFragment.PANES, mTwoPane);
-            RecipeDetailsFragment fragment = new RecipeDetailsFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.recipe_step_details_container, fragment)
-                    .commit();
-        }
+
 
         stepsRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -134,37 +149,61 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeSteps
         stepsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         stepsRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        adapter.setOnStepItemClickListener(this);
 
         ingredientTextView.setText(RecipeUtils.getIngredientsString(ingredientsList));
 
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(RECIPE_INDEX, index);
-        outState.putString(RECIPE_NAME, title);
-        outState.putParcelableArrayList(RECIPE_STEPS, steps);
-        outState.putParcelableArrayList(RECIPE_INGREDIENT, ingredientsList);
+    protected void onPause() {
+        super.onPause();
+
+        stepsListState = layoutManager.onSaveInstanceState();
     }
 
     @Override
-    public void onStepItemClickListener(View view, int position) {
-        if (mTwoPane){
-            Bundle arguments = new Bundle();
-            arguments.putInt(RecipeDetailsFragment.ITEM_ID, position);
-            arguments.putBoolean(RecipeDetailsFragment.PANES, mTwoPane);
-            RecipeDetailsFragment fragment = new RecipeDetailsFragment();
-            fragment.setArguments(arguments);
-            ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.recipe_step_details_container, fragment)
-                    .commit();
-        }else{
-            Context context = view.getContext();
-            Intent intent = new Intent(context, RecipeDetailsActivity.class);
-            intent.putExtra(RecipeDetailsFragment.ITEM_ID, position);
-            context.startActivity(intent);
+    protected void onResume() {
+        super.onResume();
+        if (stepsListState != null)
+            layoutManager.onRestoreInstanceState(stepsListState);
+        if (mPosition != -1) {
+            layoutManager.scrollToPositionWithOffset(mPosition, topView);
+            layoutManager.scrollToPosition(position);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(RECIPE_LIST, recipe);
+        stepsListState = layoutManager.onSaveInstanceState();
+
+        outState.putParcelable(STEPS_LIST_KEY, stepsListState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+
+        recipe = state.getParcelable(RECIPE_LIST);
+        steps = recipe.getSteps();
+        ingredientsList = recipe.getIngredients();
+        stepsListState = state.getParcelable(STEPS_LIST_KEY);
+
+    }
+
+    private int isLastViewed() {
+        int size = provider.getRecipeDBSize(0);
+        if (size == 0)
+            return 0;
+        else
+            return 1;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
     }
 }

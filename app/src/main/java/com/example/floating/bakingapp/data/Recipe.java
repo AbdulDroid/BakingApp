@@ -39,6 +39,8 @@ public class Recipe implements Parcelable {
     private int servings;
     @SerializedName("image")
     private String image;
+    @SerializedName("ingredient_string")
+    private String ingredient_string;
 
     public Recipe() {
     }
@@ -68,7 +70,9 @@ public class Recipe implements Parcelable {
         this.image = bake_json.getString("image");
     }
 
-
+    public void setName(String name){
+        this.name = name;
+    }
     public String getName() {
         return name;
     }
@@ -86,6 +90,14 @@ public class Recipe implements Parcelable {
     }
     public String getImage() {
         return image;
+    }
+
+    public String getIngredient_string() {
+        return ingredient_string;
+    }
+
+    public void setIngredient_string(String ingredient_string) {
+        this.ingredient_string = ingredient_string;
     }
 
     @Override

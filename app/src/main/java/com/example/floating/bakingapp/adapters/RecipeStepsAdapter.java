@@ -2,6 +2,7 @@ package com.example.floating.bakingapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -32,22 +33,16 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     private Context context;
     private boolean twoPanes;
     public static final String STEPS = "steps";
-    private View mSelectedV;
+    private int selected_position;
     String STEP_ITEM = "step_item";
-
-    public OnStepItemClickListener mItemClickListener;
-
-    public void setOnStepItemClickListener(OnStepItemClickListener mItemClickListener){
-        this.mItemClickListener = mItemClickListener;
-    }
-
-    public interface OnStepItemClickListener{
-        void onStepItemClickListener(View view, int position);
-    }
 
     public RecipeStepsAdapter(ArrayList<Steps> stepsList, boolean twoPanes){
         this.mSteps = stepsList;
         this.twoPanes = twoPanes;
+    }
+
+    public int getposition(){
+        return selected_position;
     }
 
     @Override
@@ -60,6 +55,12 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+        if(selected_position == position){
+            holder.mView.setBackgroundColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        }else{
+            holder.mView.setBackgroundColor(Color.TRANSPARENT);
+        }
         holder.recipeStep = mSteps.get(position);
         if (holder.getAdapterPosition() == 0){
             holder.stepTextView.setText("");
@@ -86,9 +87,13 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             public void onClick(View view) {
 
 //                Steps step = mSteps.get(getA)
+                notifyItemChanged(selected_position);
+                selected_position = position;
+                notifyItemChanged(selected_position);
+
                 if (twoPanes){
                     Bundle arguments = new Bundle();
-                    arguments.putInt(RecipeDetailsFragment.ITEM_ID, position);
+                    arguments.putInt(RecipeDetailsFragment.ITEM_ID, holder.getAdapterPosition());
                     arguments.putBoolean(RecipeDetailsFragment.PANES, twoPanes);
                     arguments.putParcelableArrayList(RecipeDetailsFragment.STEPS, mSteps);
                     RecipeDetailsFragment fragment = new RecipeDetailsFragment();
@@ -113,7 +118,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         return mSteps.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public View mView;
         @BindView(R.id.step_id)
@@ -129,36 +134,6 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
             ButterKnife.bind(this, view);
             view.setClickable(true);
             mView = view;
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-
-//            Steps step = mSteps.get(getAdapterPosition());
-//
-//            Bundle stepArguments = new Bundle();
-//
-//            stepArguments.putParcelable(STEP_ITEM,step);
-//            ((RecipeListActivity)context).onRecipeStepSelected(stepArguments, getAdapterPosition());
-            int mSelectedPos = 0;
-            if (mItemClickListener != null)
-                mItemClickListener.onStepItemClickListener(view, getAdapterPosition());
-            if (!view.isSelected()){
-                //We are selecting the view clicked
-                if (mSelectedV != null){
-                    //deselect the previously selected view
-                    mSelectedV.setSelected(false);
-                }
-                mSelectedPos = this.getAdapterPosition();
-                mSelectedV = view;
-            }else {
-                //We are deselecting the view clicked
-                mSelectedPos = -1;
-                mSelectedV = null;
-            }
-            //toggle the item clicked
-            view.setSelected(!view.isSelected());
         }
     }
 }
