@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -33,8 +32,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private static int index = 0;
     public static final String STEP_INDEX = "index";
     public static final String RECIPE_STEPS = "recipe_steps";
+    public static final String TITLE = "title";
     public static final String STEPS = "steps";
     private ArrayList<Steps> steps;
+    private String title;
     private FloatingActionButton fab, fab1;
     int orientation;
 
@@ -65,12 +66,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             if (savedInstanceState != null && savedInstanceState.containsKey(STEP_INDEX)) {
                 index = savedInstanceState.getInt(STEP_INDEX);
                 steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+                title = savedInstanceState.getString(TITLE);
+                getSupportActionBar().setTitle(title);
             } else {
                 final Intent intent = this.getIntent();
 
                 if (intent != null && intent.hasExtra(ITEM_ID)) {
                     index = intent.getIntExtra(ITEM_ID, 0);
                     steps = intent.getParcelableArrayListExtra(STEPS);
+                    title = intent.getStringExtra(TITLE);
+                    getSupportActionBar().setTitle(title);
                 }
             }
 
@@ -79,25 +84,21 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     if (index > 0 && index < (steps.size()-1)) {
                         --index;
+                        if(index < 0)
+                            index = 0;
+
+                        fragmentTransaction(index);
                         Timber.e(RecipeDetailsActivity.class.getSimpleName(), String.valueOf(index));
                     } else {
-                        if (index == steps.size()-1)
-                            index = steps.size()-2;
-                        else {
+                        if (index == steps.size()-1) {
+                            index = steps.size() - 2;
+                            fragmentTransaction(index);
+                        } else {
                             index = 0;
                             Toast.makeText(getApplicationContext(), "This is the first step",
                                     Toast.LENGTH_LONG).show();
                         }
                     }
-                    if(index < 0)
-                        index = 0;
-                    Bundle arguments = new Bundle();
-                    arguments.putInt(ITEM_ID, index);
-                    RecipeDetailsFragment fragment = new RecipeDetailsFragment();
-                    fragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_step_details_container, fragment)
-                            .commit();
                 }
             });
 
@@ -106,21 +107,17 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     if (index < (steps.size()-1)) {
                         ++index;
-                        Log.e(RecipeDetailsActivity.class.getSimpleName(), String.valueOf(index));
+                        if (index > steps.size() - 1)
+                            index = steps.size() -1;
+
+                        fragmentTransaction(index);
                     } else {
                         Toast.makeText(getApplicationContext(), "This is the last Step",
                                 Toast.LENGTH_LONG).show();
                         index = steps.size() - 1;
                     }
-                    if (index > steps.size() - 1)
-                        index = steps.size() -1;
-                    Bundle arguments = new Bundle();
-                    arguments.putInt(ITEM_ID, index);
-                    RecipeDetailsFragment fragment = new RecipeDetailsFragment();
-                    fragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.recipe_step_details_container, fragment)
-                            .commit();
+
+
                 }
             });
 
@@ -149,6 +146,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void fragmentTransaction(int index){
+        Bundle arguments = new Bundle();
+        arguments.putInt(ITEM_ID, index);
+        RecipeDetailsFragment fragment = new RecipeDetailsFragment();
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.recipe_step_details_container, fragment)
+                .commit();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -170,5 +177,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt(STEP_INDEX, index);
         outState.putParcelableArrayList(RECIPE_STEPS, steps);
+        outState.putString(TITLE, title);
     }
 }

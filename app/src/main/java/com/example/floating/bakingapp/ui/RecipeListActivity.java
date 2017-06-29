@@ -143,7 +143,7 @@ public class RecipeListActivity extends AppCompatActivity {
         stepsRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         stepsRecyclerView.setLayoutManager(layoutManager);
-        adapter = new RecipeStepsAdapter(steps, mTwoPane);
+        adapter = new RecipeStepsAdapter(steps, mTwoPane, title);
         stepsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         stepsRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -185,7 +185,7 @@ public class RecipeListActivity extends AppCompatActivity {
 
         recipe = state.getParcelable(RECIPE_LIST);
         //steps = recipe.getSteps();
-        ingredientsList = recipe.getIngredients();
+        //ingredientsList = recipe.getIngredients();
         stepsListState = state.getParcelable(STEPS_LIST_KEY);
     }
 

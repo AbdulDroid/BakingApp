@@ -32,13 +32,16 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     private ArrayList<Steps> mSteps;
     private Context context;
     private boolean twoPanes;
+    private String title;
+    public static final String RECIPE_TITLE = "title";
     public static final String STEPS = "steps";
     private int selected_position;
     String STEP_ITEM = "step_item";
 
-    public RecipeStepsAdapter(ArrayList<Steps> stepsList, boolean twoPanes){
+    public RecipeStepsAdapter(ArrayList<Steps> stepsList, boolean twoPanes, String title){
         this.mSteps = stepsList;
         this.twoPanes = twoPanes;
+        this.title = title;
     }
 
     public int getposition(){
@@ -106,6 +109,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                     Intent intent = new Intent(context, RecipeDetailsActivity.class);
                     intent.putExtra(RecipeDetailsFragment.ITEM_ID, holder.getAdapterPosition());
                     intent.putParcelableArrayListExtra(STEPS, mSteps);
+                    intent.putExtra(RECIPE_TITLE, title);
                     context.startActivity(intent);
                 }
             }
