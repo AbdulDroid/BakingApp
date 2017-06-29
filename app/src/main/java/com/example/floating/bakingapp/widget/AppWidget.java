@@ -8,7 +8,7 @@ import android.widget.RemoteViews;
 
 import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.data.Recipe;
-import com.example.floating.bakingapp.database.Provider;
+import com.example.floating.bakingapp.database.RecipeDbHelper;
 import com.example.floating.bakingapp.ui.RecipeActivity;
 
 
@@ -19,7 +19,7 @@ public class AppWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 
-        Provider provider = new Provider();
+        RecipeDbHelper provider = new RecipeDbHelper(context);
 
         Recipe recipe = provider.getViewedRecipe();
 

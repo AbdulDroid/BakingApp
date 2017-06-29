@@ -14,7 +14,6 @@ import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.data.Recipe;
 import com.example.floating.bakingapp.ui.RecipeListActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -95,9 +94,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
+            Recipe recipe = recipe_list.get(position);
             Intent intent = new Intent(context, RecipeListActivity.class);
-            intent.putExtra(RECIPE_INDEX, position);
-            intent.putParcelableArrayListExtra(RECIPE_LIST, (ArrayList<Recipe>)recipe_list);
+            intent.putExtra(RECIPE_LIST, recipe);
             context.startActivity(intent);
         }
     }

@@ -30,7 +30,8 @@
         <activity
             android:name=".ui.RecipeListActivity"
             android:parentActivityName=".ui.RecipeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.RecipeActivity" />

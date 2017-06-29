@@ -20,21 +20,15 @@
             android:textSize="24sp"
             android:textStyle="bold|italic"
             tools:text="@string/appwidget_text"/>
-    <!--View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimaryDark"
-        android:layout_marginBottom="@dimen/padding_small"/-->
 
     <TextView
         android:id="@+id/widget_ingredient_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingEnd="@dimen/padding_small"
-        android:paddingStart="@dimen/padding_small"
-        android:paddingBottom="@dimen/padding_small"
+        android:padding="@dimen/padding_small"
         android:textSize="@dimen/text_size_normal"
-        android:gravity="center_horizontal|center"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical"
         android:textColor="#ffffff"
         tools:text="this recipe is awesome like awesome, hmmmm hmmmm"/>
 
