@@ -72,19 +72,23 @@ public class RecipeUtils {
         return measure;
     }
 
-    public static String getIngredientsString(ArrayList<Ingredients> ingredientsList){
+    public static String getIngredientsString(ArrayList<Ingredients> ingredientsList) {
         String ingredientList;
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < ingredientsList.size(); i++) {
-            String measures = setProperMeasure(ingredientsList.get(i).getQuantity(),
-                    ingredientsList.get(i).getMeasure());
-            String ingredient = ingredientsList.get(i).getIngredient();
-            String singleIngredient = measures + ingredient + "\n";
-            stringBuilder.append(singleIngredient);
-        }
+        if (ingredientsList == null)
+            return null;
+        else {
+            for (int i = 0; i < ingredientsList.size(); i++) {
+                String measures = setProperMeasure(ingredientsList.get(i).getQuantity(),
+                        ingredientsList.get(i).getMeasure());
+                String ingredient = ingredientsList.get(i).getIngredient();
+                String singleIngredient = measures + ingredient + "\n";
+                stringBuilder.append(singleIngredient);
+            }
 
-        ingredientList = stringBuilder.toString();
-        return ingredientList;
+            ingredientList = stringBuilder.toString();
+            return ingredientList;
+        }
     }
 }

@@ -10,7 +10,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.TextView;
@@ -29,6 +28,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
@@ -45,8 +45,6 @@ public class RecipeListActivity extends AppCompatActivity {
     public static ArrayList<Ingredients> ingredientsList;
     private LinearLayoutManager layoutManager;
     String STEP_ITEM = "step_item";
-    public static final String RECIPE_INDEX = "index";
-    public static final String RECIPE_NAME = "name";
     public static final String STEPS_LIST_KEY = "recipe_steps";
     public static final String RECIPE_LIST = "recipe_list";
     private Parcelable stepsListState = null;
@@ -69,7 +67,7 @@ public class RecipeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
         ButterKnife.bind(this);
-
+        Timber.plant(new Timber.DebugTree());
         setSupportActionBar(toolbar);
 
         final ActionBar actionBar = getSupportActionBar();
@@ -118,7 +116,7 @@ public class RecipeListActivity extends AppCompatActivity {
         }
 
         if (findViewById(R.id.recipe_step_details_container) != null) {
-            Log.e("ListActivity", "containerFound");
+            Timber.e("ListActivity", "containerFound");
             // The detail container view will be present only in the
             // large-screen layouts (res/values-sw600dp).
             // If this view is present, then the
@@ -137,7 +135,7 @@ public class RecipeListActivity extends AppCompatActivity {
             }
         } else {
             mTwoPane = false;
-            Log.e("ListActivity", "containerNotFound");
+            Timber.e("ListActivity", "containerNotFound");
         }
 
 
@@ -186,10 +184,9 @@ public class RecipeListActivity extends AppCompatActivity {
         super.onRestoreInstanceState(state);
 
         recipe = state.getParcelable(RECIPE_LIST);
-        steps = recipe.getSteps();
+        //steps = recipe.getSteps();
         ingredientsList = recipe.getIngredients();
         stepsListState = state.getParcelable(STEPS_LIST_KEY);
-
     }
 
     private int isLastViewed() {

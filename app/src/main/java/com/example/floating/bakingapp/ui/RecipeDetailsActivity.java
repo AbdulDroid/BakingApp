@@ -19,6 +19,8 @@ import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
 
 import java.util.ArrayList;
 
+import timber.log.Timber;
+
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static com.example.floating.bakingapp.fragments.RecipeDetailsFragment.ITEM_ID;
 
@@ -29,8 +31,9 @@ import static com.example.floating.bakingapp.fragments.RecipeDetailsFragment.ITE
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     private static int index = 0;
-    public static final String RECIPE_INDEX = "index";
+    public static final String STEP_INDEX = "index";
     public static final String RECIPE_STEPS = "recipe_steps";
+    public static final String STEPS = "steps";
     private ArrayList<Steps> steps;
     private FloatingActionButton fab, fab1;
     int orientation;
@@ -38,6 +41,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.plant(new Timber.DebugTree());
         orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);//Remove titlebar
@@ -47,7 +51,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_recipe_detail);
 
-        if (orientation == ORIENTATION_PORTRAIT){
+        if (orientation == ORIENTATION_PORTRAIT) {
             fab = (FloatingActionButton) findViewById(R.id.fab);
             fab1 = (FloatingActionButton) findViewById(R.id.fab1);
             Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -58,21 +62,35 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
 
-            final Intent intent = this.getIntent();
+            if (savedInstanceState != null && savedInstanceState.containsKey(STEP_INDEX)) {
+                index = savedInstanceState.getInt(STEP_INDEX);
+                steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+            } else {
+                final Intent intent = this.getIntent();
 
-            if (intent != null && intent.hasExtra(ITEM_ID))
-                index = intent.getIntExtra(ITEM_ID, 0);
+                if (intent != null && intent.hasExtra(ITEM_ID)) {
+                    index = intent.getIntExtra(ITEM_ID, 0);
+                    steps = intent.getParcelableArrayListExtra(STEPS);
+                }
+            }
 
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (index > 0 && index < steps.size() - 1) {
+                    if (index > 0 && index < (steps.size()-1)) {
                         --index;
-                        Log.e(RecipeDetailsActivity.class.getSimpleName(), String.valueOf(index));
-                    }else {
-                        Toast.makeText(getApplicationContext(), "This is the first step",
-                                Toast.LENGTH_LONG).show();
+                        Timber.e(RecipeDetailsActivity.class.getSimpleName(), String.valueOf(index));
+                    } else {
+                        if (index == steps.size()-1)
+                            index = steps.size()-2;
+                        else {
+                            index = 0;
+                            Toast.makeText(getApplicationContext(), "This is the first step",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }
+                    if(index < 0)
+                        index = 0;
                     Bundle arguments = new Bundle();
                     arguments.putInt(ITEM_ID, index);
                     RecipeDetailsFragment fragment = new RecipeDetailsFragment();
@@ -86,13 +104,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             fab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (index < steps.size() - 1) {
+                    if (index < (steps.size()-1)) {
                         ++index;
                         Log.e(RecipeDetailsActivity.class.getSimpleName(), String.valueOf(index));
-                    }else{
+                    } else {
                         Toast.makeText(getApplicationContext(), "This is the last Step",
                                 Toast.LENGTH_LONG).show();
+                        index = steps.size() - 1;
                     }
+                    if (index > steps.size() - 1)
+                        index = steps.size() -1;
                     Bundle arguments = new Bundle();
                     arguments.putInt(ITEM_ID, index);
                     RecipeDetailsFragment fragment = new RecipeDetailsFragment();
@@ -119,6 +140,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             arguments.putInt(ITEM_ID, getIntent().getIntExtra(ITEM_ID, 0));
+            arguments.putParcelableArrayList(RECIPE_STEPS, steps);
             RecipeDetailsFragment fragment = new RecipeDetailsFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -146,7 +168,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(RECIPE_INDEX, index);
+        outState.putInt(STEP_INDEX, index);
         outState.putParcelableArrayList(RECIPE_STEPS, steps);
     }
 }

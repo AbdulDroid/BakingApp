@@ -21,10 +21,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include
-        layout="@layout/recipe_list"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-    
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include layout="@layout/recipe_list" />
+        </ScrollView>
+    </RelativeLayout>
+
+
 </android.support.design.widget.CoordinatorLayout>

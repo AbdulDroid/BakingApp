@@ -12,8 +12,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -33,14 +31,15 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class RecipeActivity extends AppCompatActivity {
 
     public static final String TAG = RecipeActivity.class.getSimpleName();
-    private RecyclerView.LayoutManager layoutManager;
     public static ArrayList<Recipe> mRecipes;
     public static final String RECIPE = "recipe";
     RecipeAdapter mAdapter;
+    boolean isTablet;
 
     @BindView(R.id.recipe_recylcer_view) RecyclerView mRecyclerView;
     @BindView(R.id.toolbar_main) Toolbar toolbar;
@@ -53,13 +52,17 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
         ButterKnife.bind(this);
 
+        Timber.plant(new Timber.DebugTree());
+
         toolbar.setTitle(getResources().getString(R.string.app_name));
         setSupportActionBar(toolbar);
         mRecyclerView.setHasFixedSize(true);
-        int column = 0;
-        if(getSmallestWidth() > 600) {
+        int column;
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+        if(isTablet)
             column = getResources().getInteger(R.integer.grid_column);
-        }
+        else
+            column = 0;
 
         if (savedInstanceState != null){
             mRecipes = savedInstanceState.getParcelableArrayList(RECIPE);
@@ -80,10 +83,12 @@ public class RecipeActivity extends AppCompatActivity {
                 snackbar.setAction("RETRY", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int column = 0;
-                        if (getSmallestWidth() > 600) {
+                        int column;
+                        if (isTablet)
                             column = getResources().getInteger(R.integer.grid_column);
-                        }
+                        else
+                            column = 0;
+
                         loadRecipes(column);
                         getRecipeData(url);
                     }
@@ -94,28 +99,8 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
 
-    public float getSmallestWidth() {
-        //First we create a DisplayMetrics object
-        DisplayMetrics dm = new DisplayMetrics();
-
-        //Then pass in the default display details to the display metrics we created
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-
-        //Then we can get the absolute value of the width and the height in pixels
-        int widthPixels = dm.widthPixels;
-        int heightPixels = dm.heightPixels;
-        //Then we can get the density of the pixels per inch on the device and use it as a scale factor
-        float scaleFactor = dm.density;
-
-        float widthDp = widthPixels / scaleFactor;
-        float heightDp = heightPixels / scaleFactor;
-
-        //returns the minimum screen width at all times
-        return Math.min(widthDp, heightDp);
-    }
-
     public boolean isNetworkAvailable() {
-        boolean status = false;
+        boolean status;
         try {
             ConnectivityManager connect = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetInfo = connect.getActiveNetworkInfo();
@@ -134,8 +119,8 @@ public class RecipeActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.i(TAG, "Network request successful");
-                        Log.i(TAG,"Response: = " + response);
+                        Timber.i(TAG, "Network request successful");
+                        Timber.i(TAG,"Response: = " + response);
                         try {
                             String jsonData = response.toString();
                             mRecipes = getBakingRecipe(jsonData);
@@ -145,7 +130,7 @@ public class RecipeActivity extends AppCompatActivity {
                         progressbar.setVisibility(View.INVISIBLE);
                         mRecyclerView.setVisibility(View.VISIBLE);
                         mAdapter.steRecipesData(mRecipes);
-                        Log.i(TAG, "Adapter updated appropriately");
+                        Timber.i(TAG, "Adapter updated appropriately");
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -158,7 +143,7 @@ public class RecipeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         int column = 0;
-                        if (getSmallestWidth() > 600) {
+                        if (isTablet) {
                             column = getResources().getInteger(R.integer.grid_column);
                         }
                         loadRecipes(column);
@@ -184,7 +169,9 @@ public class RecipeActivity extends AppCompatActivity {
     }
 
     private void loadRecipes(int column){
-        if (getSmallestWidth() < 600) {
+        RecyclerView.LayoutManager layoutManager;
+
+        if (!isTablet) {
             layoutManager = new LinearLayoutManager(this,
                     LinearLayoutManager.VERTICAL, false);
             RecipeListActivity.mTwoPane = false;

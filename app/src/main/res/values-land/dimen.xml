@@ -14,6 +14,6 @@
     <dimen name="widget_margin">8dp</dimen>
     <integer name="text_weight">6</integer>
     <integer name="header_weight">1</integer>
-    <dimen name="video">300dp</dimen>
+    <dimen name="video">-1dp</dimen>
     <bool name="isTablet">false</bool>
 </resources>

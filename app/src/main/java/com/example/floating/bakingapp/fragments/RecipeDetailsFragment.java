@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.example.floating.bakingapp.R;
 import com.example.floating.bakingapp.data.Steps;
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -50,6 +49,7 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
     private static final String TAG = RecipeDetailsFragment.class.getSimpleName();
     public static final String ITEM_ID = "item_id";
     public static final String POSITION = "position";
+    public static final String RECIPE_STEPS = "recipe_steps";
     public static final String PANES = "panes";
     public static final String STEPS = "steps";
     public static final String AUTOPLAY = "autoplay";
@@ -97,19 +97,19 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
             steps_list = savedInstanceState.getParcelableArrayList(STEPS);
             autoplay = savedInstanceState.getBoolean(AUTOPLAY, false);
             currVideoIndex = savedInstanceState.getInt(CURRENT_WINDOW, 0);
+        }else {
+            mIndex = getArguments().getInt(ITEM_ID);
+            mTwoPane = getArguments().getBoolean(PANES);
+            steps_list = getArguments().getParcelableArrayList(RECIPE_STEPS);
         }
 
         View rootView = inflater.inflate(R.layout.recipe_detail_fragment, container, false);
-
 
         mStepDetails = (View) rootView.findViewById(R.id.recipe_step_details_container);
         mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.video_player);
         mStepDescriptionTextView = (TextView) rootView.findViewById(R.id.recipe_step_description);
         mStepHeaderTextView = (TextView) rootView.findViewById(R.id.recipe_step_header);
         details = (CardView) rootView.findViewById(R.id.description);
-
-        mIndex = getArguments().getInt(ITEM_ID);
-        mTwoPane = getArguments().getBoolean(PANES);
 
         return rootView;
     }
@@ -141,7 +141,7 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
     private void initializePlayer(Uri mediaUri) {
         mExoPlayer = null;
         mExoPlayer = ExoPlayerFactory.newSimpleInstance(
-                new DefaultRenderersFactory(getContext()),
+                getContext(),
                 new DefaultTrackSelector(),
                 new DefaultLoadControl());
 
@@ -169,9 +169,9 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
             mStepHeaderTextView.setText(steps.get(mIndex).getShortDescription());
             mStepDescriptionTextView.setText(steps.get(mIndex).getDescription());
         } else {
+            details.setVisibility(View.VISIBLE);
             mStepHeaderTextView.setText(steps.get(mIndex).getShortDescription());
             mStepDescriptionTextView.setText(steps.get(mIndex).getDescription());
-            details.setVisibility(View.VISIBLE);
             playInstructionVideo(mIndex);
         }
     }
