@@ -36,8 +36,9 @@ import timber.log.Timber;
 public class RecipeActivity extends AppCompatActivity {
 
     public static final String TAG = RecipeActivity.class.getSimpleName();
-    public static ArrayList<Recipe> mRecipes;
     public static final String RECIPE = "recipe";
+    public static final int NOTIFICATION_ID = 10;
+    public static ArrayList<Recipe> mRecipes;
     RecipeAdapter mAdapter;
     boolean isTablet;
 
@@ -187,6 +188,7 @@ public class RecipeActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
     }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

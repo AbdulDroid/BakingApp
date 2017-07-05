@@ -36,6 +36,8 @@ dependencies {
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
 
     testCompile 'junit:junit:4.12'
+    androidTestCompile "com.android.support.test:runner:$rootProject.testRunnerVersion"
+    androidTestCompile "com.android.support.test:rules:$rootProject.testRunnerVersion"
     androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
