@@ -2,11 +2,13 @@ package com.example.floating.bakingapp.ui;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -37,6 +39,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private ArrayList<Steps> steps;
     private String title;
     private FloatingActionButton fab, fab1;
+    float x1 = 0, x2, deltaX;
+    public static final int MIN_DISTANCE = 150;
     int orientation;
 
     @Override
@@ -53,9 +57,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_detail);
 
         if (orientation == ORIENTATION_PORTRAIT) {
-            fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+            fab = findViewById(R.id.fab);
+            fab1 = findViewById(R.id.fab1);
+            Toolbar toolbar = findViewById(R.id.detail_toolbar);
             setSupportActionBar(toolbar);
 
             if (getSupportActionBar() != null) {
@@ -78,7 +82,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     getSupportActionBar().setTitle(title);
                 }
             }
-
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -121,6 +124,22 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
             });
 
+        } else {
+            if (savedInstanceState != null && savedInstanceState.containsKey(STEP_INDEX)) {
+                index = savedInstanceState.getInt(STEP_INDEX);
+                steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+                title = savedInstanceState.getString(TITLE);
+                /*getSupportActionBar().setTitle(title);*/
+            } else {
+                final Intent intent = this.getIntent();
+
+                if (intent != null && intent.hasExtra(ITEM_ID)) {
+                    index = intent.getIntExtra(ITEM_ID, 0);
+                    steps = intent.getParcelableArrayListExtra(STEPS);
+                    title = intent.getStringExtra(TITLE);
+                   /* getSupportActionBar().setTitle(title);*/
+                }
+            }
         }
 
         // savedInstanceState is non-null when there is fragment state
@@ -135,25 +154,82 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            arguments.putInt(ITEM_ID, getIntent().getIntExtra(ITEM_ID, 0));
-            arguments.putParcelableArrayList(RECIPE_STEPS, steps);
-            RecipeDetailsFragment fragment = new RecipeDetailsFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipe_step_details_container, fragment)
-                    .commit();
+            fragmentTransaction(getIntent().getIntExtra(ITEM_ID, 0));
         }
     }
 
     public void fragmentTransaction(int index){
+        showButtons(index);
         Bundle arguments = new Bundle();
         arguments.putInt(ITEM_ID, index);
+        arguments.putParcelableArrayList(RECIPE_STEPS, steps);
         RecipeDetailsFragment fragment = new RecipeDetailsFragment();
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.recipe_step_details_container, fragment)
                 .commit();
+    }
+
+    private void showButtons(int index) {
+        if (orientation == ORIENTATION_PORTRAIT) {
+            if (index <= 0)
+                fab.setVisibility(View.GONE);
+            else
+                fab.setVisibility(View.VISIBLE);
+            if (index >= steps.size() - 1)
+                fab1.setVisibility(View.GONE);
+            else
+                fab1.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+
+                deltaX = x2 - x1;
+
+                if (Math.abs(deltaX) >= MIN_DISTANCE){
+                    if (x2 > x1) {
+                        if (index > 0 && index < (steps.size()-1)) {
+                            --index;
+                            if(index < 0)
+                                index = 0;
+
+                            fragmentTransaction(index);
+                            Timber.e(RecipeDetailsActivity.class.getSimpleName(), String.valueOf(index));
+                        } else {
+                            if (index == steps.size()-1) {
+                                index = steps.size() - 2;
+                                fragmentTransaction(index);
+                            } else {
+                                index = 0;
+                                Toast.makeText(getApplicationContext(), "This is the first step",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    } else {
+                        if (index < (steps.size()-1)) {
+                            ++index;
+                            if (index > steps.size() - 1)
+                                index = steps.size() -1;
+
+                            fragmentTransaction(index);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "This is the last Step",
+                                    Toast.LENGTH_LONG).show();
+                            index = steps.size() - 1;
+                        }
+                    }
+                }
+
+        }
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -166,7 +242,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, RecipeListActivity.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                navigateUpTo(new Intent(this, RecipeListActivity.class));
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -175,8 +253,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt("orientation", orientation);
         outState.putInt(STEP_INDEX, index);
         outState.putParcelableArrayList(RECIPE_STEPS, steps);
         outState.putString(TITLE, title);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        index = savedInstanceState.getInt(STEP_INDEX);
+        steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+        title = savedInstanceState.getString(TITLE);
+        /*getSupportActionBar().setTitle(title);*/
+        super.onRestoreInstanceState(savedInstanceState);
     }
 }

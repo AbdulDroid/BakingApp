@@ -35,6 +35,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/fab_margin"
         app:fabSize="mini"
         app:srcCompat="@drawable/ic_navigate_next_white_24dp" />
 
@@ -45,6 +46,7 @@
         android:layout_gravity="bottom|start"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
         app:fabSize="mini"
         app:srcCompat="@drawable/ic_navigate_before_white_24dp" />
 

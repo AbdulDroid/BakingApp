@@ -6,4 +6,5 @@
     <color name="transparent_black">#90000000</color>
     <color name="text_color">#CFCFCF</color>
     <color name="main_card">#F9F9F9</color>
+    <color name="rv_background">#f2f3f2</color>
 </resources>

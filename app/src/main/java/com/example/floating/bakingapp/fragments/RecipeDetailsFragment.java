@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -103,13 +104,13 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
             steps_list = getArguments().getParcelableArrayList(RECIPE_STEPS);
         }
 
-        View rootView = inflater.inflate(R.layout.recipe_detail_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recipe_details, container, false);
 
-        mStepDetails = (View) rootView.findViewById(R.id.recipe_step_details_container);
-        mPlayerView = (SimpleExoPlayerView) rootView.findViewById(R.id.video_player);
-        mStepDescriptionTextView = (TextView) rootView.findViewById(R.id.recipe_step_description);
-        mStepHeaderTextView = (TextView) rootView.findViewById(R.id.recipe_step_header);
-        details = (CardView) rootView.findViewById(R.id.description);
+        mStepDetails = rootView.findViewById(R.id.recipe_step_details_container);
+        mPlayerView = rootView.findViewById(R.id.video_player);
+        mStepDescriptionTextView = rootView.findViewById(R.id.recipe_step_description);
+        mStepHeaderTextView = rootView.findViewById(R.id.recipe_step_header);
+        details = rootView.findViewById(R.id.description);
 
         return rootView;
     }
@@ -203,9 +204,7 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
 
 
     boolean isLandscape() {
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-            return true;
-        return false;
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     @SuppressLint("InlineApi")

@@ -146,6 +146,7 @@ public class RecipeListActivity extends AppCompatActivity {
         adapter = new RecipeStepsAdapter(steps, mTwoPane, title);
         stepsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         stepsRecyclerView.setAdapter(adapter);
+        stepsRecyclerView.setNestedScrollingEnabled(false);
         adapter.notifyDataSetChanged();
 
         ingredientTextView.setText(RecipeUtils.getIngredientsString(ingredientsList));
