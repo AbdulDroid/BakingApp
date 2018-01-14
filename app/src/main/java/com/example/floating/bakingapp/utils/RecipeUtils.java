@@ -2,11 +2,12 @@ package com.example.floating.bakingapp.utils;
 
 import android.net.Uri;
 
-import com.example.floating.bakingapp.data.Ingredients;
+import com.example.floating.bakingapp.model.Ingredients;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
@@ -72,7 +73,7 @@ public class RecipeUtils {
         return measure;
     }
 
-    public static String getIngredientsString(ArrayList<Ingredients> ingredientsList) {
+    public static String getIngredientsString(List<Ingredients> ingredientsList) {
         String ingredientList;
         StringBuilder stringBuilder = new StringBuilder();
 

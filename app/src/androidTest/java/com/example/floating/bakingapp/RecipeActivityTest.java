@@ -6,7 +6,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.Toolbar;
 
-import com.example.floating.bakingapp.ui.RecipeActivity;
+import com.example.floating.bakingapp.recipes.RecipeActivity;
 
 import org.junit.Rule;
 import org.junit.Test;

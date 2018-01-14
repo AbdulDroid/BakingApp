@@ -33,17 +33,21 @@ ext {
 
     //support library tools and versions
 
-    supportLibVersion = '26.0.1'
+    supportLibVersion = '27.0.2'
     constraintLayoutVersion = '1.0.2'
 
     //third party libraries version
+    retrofitVersion = '2.3.0'
+    daggerVersion = '2.12'
+    okHttpVersion = '3.8.0'
     volleyVersion = '1.0.0'
     glideVersion = '3.7.0'
-    exoPlayerVersion = 'r2.4.0'
-    butterKnifeVersion = '8.6.0'
+    exoPlayerVersion = '2.6.1'
+    butterKnifeVersion = '8.8.1'
     timberVersion = '4.5.1'
     gsonVersion = '2.8.0'
     jUnitVersion = '4.12'
-    espressoVersion = '2.2.2'
+    parcelerVersion = '1.1.9'
+    espressoVersion = '3.0.1'
     testRunnerVersion = '0.5'
 }

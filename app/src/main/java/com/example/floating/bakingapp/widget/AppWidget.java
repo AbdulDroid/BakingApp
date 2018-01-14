@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.data.Recipe;
+import com.example.floating.bakingapp.model.Recipe;
 import com.example.floating.bakingapp.database.RecipeDbHelper;
-import com.example.floating.bakingapp.ui.RecipeActivity;
+import com.example.floating.bakingapp.recipes.RecipeActivity;
 
 
 /**

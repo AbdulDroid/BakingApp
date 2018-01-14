@@ -8,19 +8,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.data.Steps;
+import com.example.floating.bakingapp.model.Steps;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
@@ -33,9 +34,11 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 
-import static com.example.floating.bakingapp.ui.RecipeListActivity.steps;
+import static com.example.floating.bakingapp.recipes.RecipeListActivity.steps;
 
 /**
  * Created by Abdulkarim on 6/14/2017.
@@ -67,6 +70,7 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
     int currVideoIndex;
     private SimpleExoPlayer mExoPlayer;
     private TextView mStepHeaderTextView, mStepDescriptionTextView;
+    private ProgressBar progressBar;
     private SimpleExoPlayerView mPlayerView;
     private CardView details;
 
@@ -95,19 +99,20 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
             mIndex = savedInstanceState.getInt(ITEM_ID);
             mTwoPane = savedInstanceState.getBoolean(PANES);
             mPosition = savedInstanceState.getLong(POSITION,0);
-            steps_list = savedInstanceState.getParcelableArrayList(STEPS);
+            steps_list = Parcels.unwrap(savedInstanceState.getParcelable(STEPS));
             autoplay = savedInstanceState.getBoolean(AUTOPLAY, false);
             currVideoIndex = savedInstanceState.getInt(CURRENT_WINDOW, 0);
         }else {
             mIndex = getArguments().getInt(ITEM_ID);
             mTwoPane = getArguments().getBoolean(PANES);
-            steps_list = getArguments().getParcelableArrayList(RECIPE_STEPS);
+            steps_list = Parcels.unwrap(getArguments().getParcelable(RECIPE_STEPS));
         }
 
         View rootView = inflater.inflate(R.layout.fragment_recipe_details, container, false);
 
         mStepDetails = rootView.findViewById(R.id.recipe_step_details_container);
         mPlayerView = rootView.findViewById(R.id.video_player);
+        progressBar = rootView.findViewById(R.id.progress_bar);
         mStepDescriptionTextView = rootView.findViewById(R.id.recipe_step_description);
         mStepHeaderTextView = rootView.findViewById(R.id.recipe_step_header);
         details = rootView.findViewById(R.id.description);
@@ -234,7 +239,7 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
         }
         outState.putBoolean(PANES, mTwoPane);
         outState.putInt(ITEM_ID, mIndex);
-        outState.putParcelableArrayList(STEPS, steps_list);
+        outState.putParcelable(STEPS, Parcels.wrap(steps_list));
     }
 
     @Override
@@ -254,12 +259,23 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        if (playbackState == ExoPlayer.STATE_READY && playWhenReady){
-            Toast.makeText(getActivity(), "Playing", Toast.LENGTH_LONG).show();
-        }
-        if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
+        if (playbackState == Player.STATE_READY && playWhenReady){
+            progressBar.setVisibility(View.GONE);
+        } else if (playbackState == Player.STATE_BUFFERING && playWhenReady) {
+            progressBar.setVisibility(View.VISIBLE);
+        }else if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
             mPosition = mExoPlayer.getCurrentPosition();
         }
+    }
+
+    @Override
+    public void onRepeatModeChanged(int repeatMode) {
+
+    }
+
+    @Override
+    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
     }
 
     @Override
@@ -268,12 +284,17 @@ public class RecipeDetailsFragment extends Fragment implements ExoPlayer.EventLi
     }
 
     @Override
-    public void onPositionDiscontinuity() {
+    public void onPositionDiscontinuity(int reason) {
 
     }
 
     @Override
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+    }
+
+    @Override
+    public void onSeekProcessed() {
 
     }
 }

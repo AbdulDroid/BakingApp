@@ -4,8 +4,8 @@ import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.floating.bakingapp.ui.RecipeActivity;
-import com.example.floating.bakingapp.ui.RecipeListActivity;
+import com.example.floating.bakingapp.recipes.RecipeActivity;
+import com.example.floating.bakingapp.recipes.RecipeListActivity;
 
 import org.junit.Rule;
 import org.junit.Test;

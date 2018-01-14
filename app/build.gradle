@@ -1,3 +1,5 @@
+import org.w3c.dom.DOMImplementation
+
 apply plugin: 'com.android.application'
 
 android {
@@ -20,29 +22,34 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$rootProject.supportLibVersion"
-    compile "com.android.support.constraint:constraint-layout:$rootProject.constraintLayoutVersion"
-    compile "com.android.support:support-v4:$rootProject.supportLibVersion"
-    compile "com.android.support:support-annotations:$rootProject.supportLibVersion"
-    compile "com.android.support:recyclerview-v7:$rootProject.supportLibVersion"
-    compile "com.android.support:cardview-v7:$rootProject.supportLibVersion"
-    compile "com.android.support:design:$rootProject.supportLibVersion"
-    compile "com.android.volley:volley:$rootProject.volleyVersion"
-    compile "com.github.bumptech.glide:glide:$rootProject.glideVersion"
-    compile "com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion"
-    compile "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
-    compile "com.jakewharton.timber:timber:$rootProject.timberVersion"
-    compile "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibVersion"
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.constraintLayoutVersion"
+    implementation "com.android.support:support-v4:$rootProject.supportLibVersion"
+    implementation "com.android.support:support-annotations:$rootProject.supportLibVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibVersion"
+    implementation "com.android.support:cardview-v7:$rootProject.supportLibVersion"
+    implementation "com.android.support:design:$rootProject.supportLibVersion"
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    implementation "com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttpVersion"
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    implementation "com.jakewharton:butterknife:$rootProject.butterKnifeVersion"
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+    implementation "org.parceler:parceler-api:$rootProject.parcelerVersion"
 
-    testCompile 'junit:junit:4.12'
-    androidTestCompile "com.android.support.test:runner:$rootProject.testRunnerVersion"
-    androidTestCompile "com.android.support.test:rules:$rootProject.testRunnerVersion"
-    androidTestCompile "com.android.support:support-annotations:$rootProject.supportLibVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
-    compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
-    androidTestCompile "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion", {
+    testImplementation 'junit:junit:4.12'
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
+    annotationProcessor "org.parceler:parceler:$rootProject.parcelerVersion"
+    androidTestImplementation "com.android.support.test:runner:$rootProject.testRunnerVersion"
+    androidTestImplementation "com.android.support.test:rules:$rootProject.testRunnerVersion"
+    androidTestImplementation "com.android.support:support-annotations:$rootProject.supportLibVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion", {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'design'

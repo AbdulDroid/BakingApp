@@ -1,4 +1,4 @@
-package com.example.floating.bakingapp.ui;
+package com.example.floating.bakingapp.recipes;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -15,25 +15,23 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.floating.bakingapp.AppController;
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.adapters.RecipeAdapter;
-import com.example.floating.bakingapp.data.Recipe;
+import com.example.floating.bakingapp.recipes.adapter.RecipeAdapter;
+import com.example.floating.bakingapp.model.Recipe;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import timber.log.Timber;
 
-public class RecipeActivity extends AppCompatActivity {
+public class RecipeActivity extends AppCompatActivity implements RecipeContract.View{
 
     public static final String TAG = RecipeActivity.class.getSimpleName();
     public static final String RECIPE = "recipe";
@@ -46,13 +44,21 @@ public class RecipeActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_main) Toolbar toolbar;
     @BindView(R.id.main) CoordinatorLayout layout;
     @BindView(R.id.progress_bar) ProgressBar progressbar;
+    Unbinder unbinder;
+
+    @Inject
+    RecipePresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
+        ((AppController) getApplication())
+                .getAppComponent()
+                .add(new RecipeModule(this))
+                .inject(this);
         Timber.plant(new Timber.DebugTree());
 
         toolbar.setTitle(getResources().getString(R.string.app_name));
@@ -66,17 +72,15 @@ public class RecipeActivity extends AppCompatActivity {
             column = 0;
 
         if (savedInstanceState != null){
-            mRecipes = savedInstanceState.getParcelableArrayList(RECIPE);
+            mRecipes = Parcels.unwrap(savedInstanceState.getParcelable(RECIPE));
             loadRecipes(column);
         }else {
-
-            final String url = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/" +
-                    "59121517_baking/baking.json";
 
             if (isNetworkAvailable()) {
                 mRecyclerView.setVisibility(View.VISIBLE);
                 loadRecipes(column);
-                getRecipeData(url);
+                progressbar.setVisibility(View.VISIBLE);
+                presenter.getRecipes();
             } else {
                 mRecyclerView.setVisibility(View.INVISIBLE);
                 Snackbar snackbar = Snackbar.make(layout, "No Internet Connection," +
@@ -91,7 +95,8 @@ public class RecipeActivity extends AppCompatActivity {
                             column = 0;
 
                         loadRecipes(column);
-                        getRecipeData(url);
+                        progressbar.setVisibility(View.VISIBLE);
+                        presenter.getRecipes();
                     }
                 });
                 snackbar.show();
@@ -113,60 +118,10 @@ public class RecipeActivity extends AppCompatActivity {
         return status;
     }
 
-    public void getRecipeData(final String url) {
-        progressbar.setVisibility(View.VISIBLE);
-
-        JsonArrayRequest req = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Timber.i(TAG, "Network request successful");
-                        Timber.i(TAG,"Response: = " + response);
-                        try {
-                            String jsonData = response.toString();
-                            mRecipes = getBakingRecipe(jsonData);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                        progressbar.setVisibility(View.INVISIBLE);
-                        mRecyclerView.setVisibility(View.VISIBLE);
-                        mAdapter.steRecipesData(mRecipes);
-                        Timber.i(TAG, "Adapter updated appropriately");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                VolleyLog.d(TAG, "Error: " + error.getMessage());
-                mRecyclerView.setVisibility(View.INVISIBLE);
-                Snackbar snackbar = Snackbar.make(layout, "No Internet Connection," +
-                        " Turn ON data and click RERTY", Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction("RETRY", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int column = 0;
-                        if (isTablet) {
-                            column = getResources().getInteger(R.integer.grid_column);
-                        }
-                        loadRecipes(column);
-                        getRecipeData(url);
-                    }
-                });
-                snackbar.show();
-                progressbar.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        AppController.getInstance().addToRequestQueue(req);
-    }
-
-    private ArrayList<Recipe> getBakingRecipe(String jsonData) throws JSONException {
-        JSONArray bakeArray = new JSONArray(jsonData);
-        mRecipes = new ArrayList<>();
-        for (int i = 0; i < bakeArray.length(); i++) {
-            mRecipes.add(new Recipe(bakeArray.getJSONObject(i)));
-        }
-
-        return mRecipes;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     private void loadRecipes(int column){
@@ -192,6 +147,20 @@ public class RecipeActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(RECIPE, mRecipes);
+        outState.putParcelable(RECIPE, Parcels.wrap(mRecipes));
+    }
+
+    @Override
+    public void onGetRecipeSuccess(ArrayList<Recipe> recipes) {
+        mRecipes = recipes;
+        progressbar.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mAdapter.steRecipesData(mRecipes);
+        Timber.i(TAG, "Adapter updated appropriately");
+    }
+
+    @Override
+    public void onGetRecipeError(String error) {
+
     }
 }

@@ -1,4 +1,4 @@
-package com.example.floating.bakingapp.adapters;
+package com.example.floating.bakingapp.recipes.adapter;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,16 +16,18 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.data.Recipe;
-import com.example.floating.bakingapp.ui.RecipeActivity;
-import com.example.floating.bakingapp.ui.RecipeListActivity;
+import com.example.floating.bakingapp.model.Recipe;
+import com.example.floating.bakingapp.recipes.RecipeActivity;
+import com.example.floating.bakingapp.recipes.RecipeListActivity;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.example.floating.bakingapp.ui.RecipeActivity.NOTIFICATION_ID;
+import static com.example.floating.bakingapp.recipes.RecipeActivity.NOTIFICATION_ID;
 
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
@@ -101,7 +103,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                         .setPriority(NotificationCompat.PRIORITY_LOW);
         Intent callingIntent = new Intent(context, RecipeListActivity.class);
         Recipe recipe = recipe_list.get(position);
-        callingIntent.putExtra(RECIPE_LIST, recipe);
+        callingIntent.putExtra(RECIPE_LIST, Parcels.wrap(recipe));
 
 
         // This stack builder object will contain an artificial back stack for the started
@@ -150,7 +152,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
                     recipe_list.get(position).getServings());
             Recipe recipe = recipe_list.get(position);
             Intent intent = new Intent(context, RecipeListActivity.class);
-            intent.putExtra(RECIPE_LIST, recipe);
+            intent.putExtra(RECIPE_LIST, Parcels.wrap(recipe));
             setNotification(recipeName + "\n" + servings, position);
             context.startActivity(intent);
         }

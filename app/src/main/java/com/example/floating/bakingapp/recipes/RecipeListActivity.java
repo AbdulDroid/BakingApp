@@ -1,4 +1,4 @@
-package com.example.floating.bakingapp.ui;
+package com.example.floating.bakingapp.recipes;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -15,14 +15,16 @@ import android.view.MenuInflater;
 import android.widget.TextView;
 
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.adapters.RecipeStepsAdapter;
-import com.example.floating.bakingapp.data.Ingredients;
-import com.example.floating.bakingapp.data.Recipe;
-import com.example.floating.bakingapp.data.Steps;
+import com.example.floating.bakingapp.details.adapter.RecipeStepsAdapter;
+import com.example.floating.bakingapp.model.Ingredients;
+import com.example.floating.bakingapp.model.Recipe;
+import com.example.floating.bakingapp.model.Steps;
 import com.example.floating.bakingapp.database.RecipeContract;
 import com.example.floating.bakingapp.database.RecipeDbHelper;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
 import com.example.floating.bakingapp.utils.RecipeUtils;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -84,9 +86,9 @@ public class RecipeListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(RECIPE_LIST)) {
 
-            recipe = intent.getParcelableExtra(RECIPE_LIST);
-            steps = recipe.getSteps();
-            ingredientsList = recipe.getIngredients();
+            recipe = Parcels.unwrap(intent.getParcelableExtra(RECIPE_LIST));
+            steps = new ArrayList<>(recipe.getSteps());
+            ingredientsList = new ArrayList<>(recipe.getIngredients());
             title = recipe.getName();
 
             if (title != null)
@@ -174,7 +176,7 @@ public class RecipeListActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(RECIPE_LIST, recipe);
+        outState.putParcelable(RECIPE_LIST, Parcels.wrap(recipe));
         stepsListState = layoutManager.onSaveInstanceState();
 
         outState.putParcelable(STEPS_LIST_KEY, stepsListState);

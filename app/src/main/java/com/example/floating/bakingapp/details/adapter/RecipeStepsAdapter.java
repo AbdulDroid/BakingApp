@@ -1,4 +1,4 @@
-package com.example.floating.bakingapp.adapters;
+package com.example.floating.bakingapp.details.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +14,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.data.Steps;
+import com.example.floating.bakingapp.model.Steps;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
-import com.example.floating.bakingapp.ui.RecipeDetailsActivity;
+import com.example.floating.bakingapp.details.RecipeDetailsActivity;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -98,7 +100,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                     Bundle arguments = new Bundle();
                     arguments.putInt(RecipeDetailsFragment.ITEM_ID, holder.getAdapterPosition());
                     arguments.putBoolean(RecipeDetailsFragment.PANES, twoPanes);
-                    arguments.putParcelableArrayList(RecipeDetailsFragment.STEPS, mSteps);
+                    arguments.putParcelable(RecipeDetailsFragment.STEPS, Parcels.wrap(mSteps));
                     RecipeDetailsFragment fragment = new RecipeDetailsFragment();
                     fragment.setArguments(arguments);
                     ((AppCompatActivity)view.getContext()).getSupportFragmentManager().beginTransaction()
@@ -108,7 +110,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeDetailsActivity.class);
                     intent.putExtra(RecipeDetailsFragment.ITEM_ID, holder.getAdapterPosition());
-                    intent.putParcelableArrayListExtra(STEPS, mSteps);
+                    intent.putExtra(STEPS, Parcels.wrap(mSteps));
                     intent.putExtra(RECIPE_TITLE, title);
                     context.startActivity(intent);
                 }

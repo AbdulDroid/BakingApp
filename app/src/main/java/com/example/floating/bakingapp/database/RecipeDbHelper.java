@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.floating.bakingapp.data.Recipe;
+import com.example.floating.bakingapp.model.Recipe;
 import com.example.floating.bakingapp.utils.RecipeUtils;
 
 import static com.example.floating.bakingapp.database.RecipeContract.RecipeEntry.COLUMN_INGREDIENT_LIST;

@@ -20,7 +20,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".ui.RecipeActivity"
+        <activity android:name=".recipes.RecipeActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,21 +29,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.RecipeListActivity"
-            android:parentActivityName=".ui.RecipeActivity"
+            android:name=".recipes.RecipeListActivity"
+            android:parentActivityName=".recipes.RecipeActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.RecipeActivity" />
+                android:value=".recipes.RecipeActivity" />
         </activity>
         <activity
-            android:name=".ui.RecipeDetailsActivity"
-            android:parentActivityName=".ui.RecipeListActivity"
+            android:name=".details.RecipeDetailsActivity"
+            android:parentActivityName=".recipes.RecipeListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.RecipeListActivity" />
+                android:value=".recipes.RecipeListActivity" />
         </activity>
 
         <receiver android:name=".widget.AppWidget">

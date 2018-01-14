@@ -3,9 +3,10 @@ package com.example.floating.bakingapp;
 import android.app.Application;
 import android.text.TextUtils;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+import com.example.floating.bakingapp.di.AppComponent;
+import com.example.floating.bakingapp.di.AppModule;
+import com.example.floating.bakingapp.di.DaggerAppComponent;
+import com.example.floating.bakingapp.di.NetModule;
 
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
@@ -13,23 +14,25 @@ import com.android.volley.toolbox.Volley;
 
 public class AppController extends Application {
 
-    public static final String TAG = AppController.class.getSimpleName();
-
-    private RequestQueue mRequestQueue;
-
-    private static AppController mInstance;
+    private AppComponent appComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mInstance = this;
+
+
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .netModule(new NetModule())
+                .build();
     }
 
-    public static synchronized AppController getInstance(){
-        return mInstance;
+
+    public AppComponent getAppComponent(){
+        return appComponent;
     }
 
-    public RequestQueue getRequestQueue(){
+    /*public RequestQueue getRequestQueue(){
         if (mRequestQueue == null){
             mRequestQueue = Volley.newRequestQueue(getApplicationContext());
         }
@@ -51,5 +54,5 @@ public class AppController extends Application {
         if (mRequestQueue != null){
             mRequestQueue.cancelAll(tag);
         }
-    }
+    }*/
 }

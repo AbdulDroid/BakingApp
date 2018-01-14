@@ -1,4 +1,4 @@
-package com.example.floating.bakingapp.ui;
+package com.example.floating.bakingapp.details;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -15,8 +15,11 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.floating.bakingapp.R;
-import com.example.floating.bakingapp.data.Steps;
+import com.example.floating.bakingapp.model.Steps;
 import com.example.floating.bakingapp.fragments.RecipeDetailsFragment;
+import com.example.floating.bakingapp.recipes.RecipeListActivity;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -69,7 +72,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
             if (savedInstanceState != null && savedInstanceState.containsKey(STEP_INDEX)) {
                 index = savedInstanceState.getInt(STEP_INDEX);
-                steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+                steps = Parcels.unwrap(savedInstanceState.getParcelable(RECIPE_STEPS));
                 title = savedInstanceState.getString(TITLE);
                 getSupportActionBar().setTitle(title);
             } else {
@@ -77,7 +80,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
                 if (intent != null && intent.hasExtra(ITEM_ID)) {
                     index = intent.getIntExtra(ITEM_ID, 0);
-                    steps = intent.getParcelableArrayListExtra(STEPS);
+                    steps = Parcels.unwrap(intent.getParcelableExtra(STEPS));
                     title = intent.getStringExtra(TITLE);
                     getSupportActionBar().setTitle(title);
                 }
@@ -123,11 +126,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
                 }
             });
-
         } else {
             if (savedInstanceState != null && savedInstanceState.containsKey(STEP_INDEX)) {
                 index = savedInstanceState.getInt(STEP_INDEX);
-                steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+                steps = Parcels.unwrap(savedInstanceState.getParcelable(RECIPE_STEPS));
                 title = savedInstanceState.getString(TITLE);
                 /*getSupportActionBar().setTitle(title);*/
             } else {
@@ -135,7 +137,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
                 if (intent != null && intent.hasExtra(ITEM_ID)) {
                     index = intent.getIntExtra(ITEM_ID, 0);
-                    steps = intent.getParcelableArrayListExtra(STEPS);
+                    steps = Parcels.unwrap(intent.getParcelableExtra(STEPS));
                     title = intent.getStringExtra(TITLE);
                    /* getSupportActionBar().setTitle(title);*/
                 }
@@ -162,7 +164,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         showButtons(index);
         Bundle arguments = new Bundle();
         arguments.putInt(ITEM_ID, index);
-        arguments.putParcelableArrayList(RECIPE_STEPS, steps);
+        arguments.putParcelable(RECIPE_STEPS, Parcels.wrap(steps));
         RecipeDetailsFragment fragment = new RecipeDetailsFragment();
         fragment.setArguments(arguments);
         getSupportFragmentManager().beginTransaction()
@@ -255,14 +257,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("orientation", orientation);
         outState.putInt(STEP_INDEX, index);
-        outState.putParcelableArrayList(RECIPE_STEPS, steps);
+        outState.putParcelable(RECIPE_STEPS, Parcels.wrap(steps));
         outState.putString(TITLE, title);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         index = savedInstanceState.getInt(STEP_INDEX);
-        steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS);
+        steps = Parcels.unwrap(savedInstanceState.getParcelable(RECIPE_STEPS));
         title = savedInstanceState.getString(TITLE);
         /*getSupportActionBar().setTitle(title);*/
         super.onRestoreInstanceState(savedInstanceState);
