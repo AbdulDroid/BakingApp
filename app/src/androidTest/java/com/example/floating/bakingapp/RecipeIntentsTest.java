@@ -46,7 +46,7 @@ public class RecipeIntentsTest {
     @Test
     public void RecipeIntentComponentsTest() {
 
-        String RECIPE_LIST = "recipe_list";
+        String RECIPE_LIST = "recipeList";
 
         try {
             Thread.sleep(3000);

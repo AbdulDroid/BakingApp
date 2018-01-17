@@ -1,6 +1,11 @@
-import org.w3c.dom.DOMImplementation
-
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'org.jetbrains.kotlin.android.extensions'
+
+androidExtensions {
+    experimental = true
+}
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -40,6 +45,8 @@ dependencies {
     implementation "org.parceler:parceler-api:$rootProject.parcelerVersion"
 
     testImplementation 'junit:junit:4.12'
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    kapt "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterKnifeVersion"
     annotationProcessor "org.parceler:parceler:$rootProject.parcelerVersion"
@@ -55,4 +62,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'recyclerview-v7'
     }
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }
