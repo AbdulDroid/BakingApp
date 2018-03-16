@@ -82,7 +82,7 @@ class RecipeActivity : AppCompatActivity(), RecipeContract.View {
             column = 0
 
         if (savedInstanceState != null) {
-            mRecipes = Parcels.unwrap(savedInstanceState.getParcelable<Parcelable>(RECIPE))
+            mRecipes = savedInstanceState.getParcelableArrayList(RECIPE)
             loadRecipes(column)
         } else {
 
@@ -136,7 +136,7 @@ class RecipeActivity : AppCompatActivity(), RecipeContract.View {
 
     public override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState!!.putParcelable(RECIPE, Parcels.wrap(mRecipes))
+        outState!!.putParcelableArrayList(RECIPE, mRecipes)
     }
 
     override fun onGetRecipeSuccess(recipes: ArrayList<Recipe>) {

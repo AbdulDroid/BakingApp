@@ -10,16 +10,6 @@ import kotlinx.android.parcel.Parcelize
  */
 @SuppressLint("ParcelCreator")
 @Parcelize
-class Ingredients : Parcelable {
-    val quantity: Double = 0.toDouble()
-    val measure: String? = null
-    val ingredient: String? = null
-
-    override fun toString(): String {
-        return "Ingredients{" +
-                "quantity=" + quantity +
-                ", measure='" + measure + '\'' +
-                ", ingredient='" + ingredient + '\'' +
-                '}'
-    }
-}
+data class Ingredients(var quantity: Double,
+                       var measure: String,
+                       var ingredient: String): Parcelable

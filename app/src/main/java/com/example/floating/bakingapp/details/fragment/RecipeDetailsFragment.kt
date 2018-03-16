@@ -77,13 +77,13 @@ class RecipeDetailsFragment : Fragment(), ExoPlayer.EventListener {
             mIndex = savedInstanceState.getInt(ITEM_ID)
             mTwoPane = savedInstanceState.getBoolean(PANES)
             mPosition = savedInstanceState.getLong(POSITION, 0)
-            steps_list = Parcels.unwrap(savedInstanceState.getParcelable<Parcelable>(STEPS))
+            steps_list = savedInstanceState.getParcelableArrayList(STEPS)
             autoplay = savedInstanceState.getBoolean(AUTOPLAY, false)
             currVideoIndex = savedInstanceState.getInt(CURRENT_WINDOW, 0)
         } else {
             mIndex = arguments!!.getInt(ITEM_ID)
             mTwoPane = arguments!!.getBoolean(PANES)
-            steps_list = Parcels.unwrap(arguments!!.getParcelable<Parcelable>(RECIPE_STEPS))
+            steps_list = arguments!!.getParcelableArrayList(RECIPE_STEPS)
         }
 
         val rootView = inflater.inflate(R.layout.fragment_recipe_details, container, false)

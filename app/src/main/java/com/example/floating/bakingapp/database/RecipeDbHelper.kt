@@ -28,7 +28,7 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                     null, null, null, null, null, null
             )
 
-            val recipe = Recipe(0)
+            val recipe = Recipe(0, "", null, null, 0, "", "")
 
             if (cursor.moveToFirst()) {
                 do {
@@ -99,8 +99,8 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = this.readableDatabase
 
         val cursor = db.query(
-                TABLE_NAME, null, null, null, null, null, null
-        )
+                TABLE_NAME, null, null, null, null,
+                null, null)
 
         val size = cursor.count
         cursor.close()
@@ -111,9 +111,9 @@ class RecipeDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     companion object {
 
         //Database version
-        private val VERSION = 1
+        private const val VERSION = 1
 
         //Database name
-        private val DATABASE_NAME = "recipe.db"
+        private const val DATABASE_NAME = "recipe.db"
     }
 }

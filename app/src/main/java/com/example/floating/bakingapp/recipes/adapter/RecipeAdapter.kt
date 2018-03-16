@@ -24,6 +24,7 @@ import org.parceler.Parcels
 
 import butterknife.BindView
 import butterknife.ButterKnife
+import com.example.floating.bakingapp.utils.RecipeUtils
 
 /**
  * Copyright (c) Abdulkarim Abdulrahman Ayoola on 6/14/2017.
@@ -42,7 +43,8 @@ class RecipeAdapter() : RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val contextOne = parent.context
         val view: View
-        view = LayoutInflater.from(contextOne).inflate(R.layout.recipe_list_content, parent, false)
+        view = LayoutInflater.from(contextOne).inflate(R.layout.recipe_list_content, parent,
+                false)
         return ViewHolder(view)
     }
 
@@ -59,12 +61,23 @@ class RecipeAdapter() : RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
                 .load(recipeImage)
                 .placeholder(imageResource(position))
                 .into(holder.recipeImageView!!)
+
+        holder.v.setOnClickListener {
+            val ingredient_list = RecipeUtils.getIngredientsString(recipeList[position].ingredients)
+            recipeList[position].ingredient_string = ingredient_list
+            val recipe = recipeList!![position]
+            val intent = Intent(context, RecipeListActivity::class.java)
+            intent.putExtra(RECIPE_LIST, recipe)
+            setNotification(recipeName + "\n" + servings, position)
+            context!!.startActivity(intent)
+        }
     }
 
     override fun getItemCount() = recipeList.size
 
     private fun imageResource(index: Int): Int {
-        val imageResource = intArrayOf(R.drawable.nutella_pie_one, R.drawable.brownies_one, R.drawable.yellow_cake_0, R.drawable.cheese_cake_one)
+        val imageResource = intArrayOf(R.drawable.nutella_pie_one, R.drawable.brownies_one,
+                R.drawable.yellow_cake_0, R.drawable.cheese_cake_one)
         return imageResource[index]
     }
 
@@ -77,11 +90,12 @@ class RecipeAdapter() : RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
                 .setAutoCancel(true)
                 .setShowWhen(true)
                 .setCategory("alarm")
-                .setLargeIcon(BitmapFactory.decodeResource(context!!.resources, R.drawable.nutella_pie_three))
+                .setLargeIcon(BitmapFactory.decodeResource(context!!.resources,
+                        R.drawable.nutella_pie_three))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
         val callingIntent = Intent(context, RecipeListActivity::class.java)
         val recipe = recipeList!![position]
-        callingIntent.putExtra(RECIPE_LIST, Parcels.wrap(recipe))
+        callingIntent.putExtra(RECIPE_LIST, recipe)
 
 
         // This stack builder object will contain an artificial back stack for the started
@@ -104,32 +118,18 @@ class RecipeAdapter() : RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
         notificationManager.notify(RecipeActivity.NOTIFICATION_ID, mBuilder.build())
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         @BindView(R.id.recipe_name) internal lateinit var recipeTextView: TextView
         @BindView(R.id.number_of_servings) internal lateinit var servingTextView: TextView
         @BindView(R.id.recipe_image) internal lateinit var recipeImageView: ImageView
+        internal var v: View
 
         init {
             ButterKnife.bind(this, view)
             view.isClickable = true
-            view.setOnClickListener(this)
+            v = view;
             context = view.context
-        }
-
-        override fun onClick(view: View) {
-
-            val recipeName: String?
-            val servings: String
-            val position = adapterPosition
-            recipeName = recipeList!![position].name
-            servings = String.format(context!!.getString(R.string.servings_text),
-                    recipeList!![position].servings)
-            val recipe = recipeList!![position]
-            val intent = Intent(context, RecipeListActivity::class.java)
-            intent.putExtra(RECIPE_LIST, Parcels.wrap(recipe))
-            setNotification(recipeName + "\n" + servings, position)
-            context!!.startActivity(intent)
         }
     }
 

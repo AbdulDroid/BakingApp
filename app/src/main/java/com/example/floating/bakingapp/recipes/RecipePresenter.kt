@@ -25,7 +25,7 @@ internal constructor(view: RecipeContract.View, private val apiService: ApiServi
     private val view: WeakReference<RecipeContract.View>?
 
     init {
-        this.view = WeakReference<RecipeContract.View>(view)
+        this.view = WeakReference(view)
     }
 
     override fun getRecipes() {

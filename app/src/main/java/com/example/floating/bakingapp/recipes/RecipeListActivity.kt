@@ -42,7 +42,8 @@ class RecipeListActivity : AppCompatActivity() {
     private var topView: Int = 0
     private var position: Int = 0
     private var recipe: Recipe? = null
-    private lateinit var adapter: RecipeStepsAdapter
+    private lateinit var adapter:
+            RecipeStepsAdapter
     private var provider: RecipeDbHelper? = null
     internal var title: String? = null
 
@@ -76,7 +77,7 @@ class RecipeListActivity : AppCompatActivity() {
         val intent = intent
         if (intent != null && intent.hasExtra(RECIPE_LIST)) {
 
-            recipe = Parcels.unwrap(intent.getParcelableExtra(RECIPE_LIST))
+            recipe = intent.getParcelableExtra(RECIPE_LIST)
             steps = ArrayList(recipe!!.steps!!)
             ingredientsList = ArrayList(recipe!!.ingredients!!)
             title = recipe!!.name
@@ -163,7 +164,7 @@ class RecipeListActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState!!.putParcelable(RECIPE_LIST, Parcels.wrap(recipe))
+        outState!!.putParcelable(RECIPE_LIST, recipe)
         stepsListState = layoutManager!!.onSaveInstanceState()
 
         outState.putParcelable(STEPS_LIST_KEY, stepsListState)
@@ -172,7 +173,7 @@ class RecipeListActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(state: Bundle) {
         super.onRestoreInstanceState(state)
 
-        recipe = Parcels.unwrap(state.getParcelable(RECIPE_LIST))
+        recipe = state.getParcelable(RECIPE_LIST)
         //steps = recipe.getSteps();
         //ingredientsList = recipe.getIngredients();
         stepsListState = state.getParcelable(STEPS_LIST_KEY)

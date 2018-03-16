@@ -68,7 +68,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
 
             if (savedInstanceState != null && savedInstanceState.containsKey(STEP_INDEX)) {
                 index = savedInstanceState.getInt(STEP_INDEX)
-                steps = Parcels.unwrap<ArrayList<Steps>>(savedInstanceState.getParcelable<Parcelable>(RECIPE_STEPS))
+                steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS)
                 title = savedInstanceState.getString(TITLE)
                 supportActionBar!!.setTitle(title)
             } else {
@@ -76,7 +76,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
 
                 if (intent != null && intent.hasExtra(RecipeDetailsFragment.ITEM_ID)) {
                     index = intent.getIntExtra(RecipeDetailsFragment.ITEM_ID, 0)
-                    steps = Parcels.unwrap<ArrayList<Steps>>(intent.getParcelableExtra<Parcelable>(STEPS))
+                    steps = intent.getParcelableArrayListExtra(STEPS)
                     title = intent.getStringExtra(TITLE)
                     supportActionBar!!.setTitle(title)
                 }
@@ -117,7 +117,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         } else {
             if (savedInstanceState != null && savedInstanceState.containsKey(STEP_INDEX)) {
                 index = savedInstanceState.getInt(STEP_INDEX)
-                steps = Parcels.unwrap<ArrayList<Steps>>(savedInstanceState.getParcelable<Parcelable>(RECIPE_STEPS))
+                steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS)
                 title = savedInstanceState.getString(TITLE)
                 /*getSupportActionBar().setTitle(title);*/
             } else {
@@ -125,7 +125,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
 
                 if (intent != null && intent.hasExtra(RecipeDetailsFragment.ITEM_ID)) {
                     index = intent.getIntExtra(RecipeDetailsFragment.ITEM_ID, 0)
-                    steps = Parcels.unwrap<ArrayList<Steps>>(intent.getParcelableExtra<Parcelable>(STEPS))
+                    steps = intent.getParcelableArrayListExtra(STEPS)
                     title = intent.getStringExtra(TITLE)
                     /* getSupportActionBar().setTitle(title);*/
                 }
@@ -152,7 +152,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         showButtons(index)
         val arguments = Bundle()
         arguments.putInt(ITEM_ID, index)
-        arguments.putParcelable(RECIPE_STEPS, Parcels.wrap<ArrayList<Steps>>(steps))
+        arguments.putParcelableArrayList(RECIPE_STEPS, steps)
         val fragment = RecipeDetailsFragment()
         fragment.arguments = arguments
         supportFragmentManager.beginTransaction()
@@ -240,13 +240,13 @@ class RecipeDetailsActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState!!.putInt("orientation", orientation)
         outState.putInt(STEP_INDEX, index)
-        outState.putParcelable(RECIPE_STEPS, Parcels.wrap<ArrayList<Steps>>(steps))
+        outState.putParcelableArrayList(RECIPE_STEPS, steps)
         outState.putString(TITLE, title)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         index = savedInstanceState.getInt(STEP_INDEX)
-        steps = Parcels.unwrap<ArrayList<Steps>>(savedInstanceState.getParcelable<Parcelable>(RECIPE_STEPS))
+        steps = savedInstanceState.getParcelableArrayList(RECIPE_STEPS)
         title = savedInstanceState.getString(TITLE)
         /*getSupportActionBar().setTitle(title);*/
         super.onRestoreInstanceState(savedInstanceState)
